@@ -7,12 +7,12 @@
   <style>
     /* Mencegah penyeleksian teks untuk sebagian besar elemen */
     body, .container, h1, p, div, span, button, .dzikir-actions {
-      -webkit-user-select: none; /* Chrome/Safari */
-      -moz-user-select: none;    /* Firefox */
-      -ms-user-select: none;     /* IE10+ */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
       user-select: none;
     }
-    /* Namun, izinkan pada input supaya pengguna dapat mengetik */
+    /* Izinkan input dapat diseleksi */
     input {
       -webkit-user-select: text;
       -moz-user-select: text;
@@ -57,7 +57,6 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-      /* Tambahkan animasi fadeInUp */
       animation: fadeInUp 1s ease;
     }
     h1 {
@@ -110,6 +109,7 @@
       padding: 5px 10px;
       border: 1px solid #ddd;
       border-radius: 5px;
+      text-align: center;
     }
     .counter-display {
       font-size: 60px;
@@ -541,13 +541,20 @@
 
     // Event listener dropdown dzikir
     dzikirTypeSelect.addEventListener('change', function() {
-      dzikirDisplay.textContent = this.options[this.selectedIndex].text;
-      updateButtonsState();
-    });
+  dzikirDisplay.textContent = this.options[this.selectedIndex].text;
+  // Reset hitungan dan target saat mengganti jenis dzikir
+  count = 0;
+  targetCount = 0;
+  targetCountInput.value = "";
+  updateDisplay();
+  updateButtonsState();
+});
 
     // Event listener untuk target count input
     targetCountInput.addEventListener('input', function() {
       targetCount = parseInt(this.value) || 0;
+      // Reset count saat target berubah
+      count = 0;
       targetDisplay.textContent = targetCount;
       updateDisplay();
       updateButtonsState();
@@ -587,7 +594,6 @@
     editDzikirBtn.addEventListener('click', function() {
       const selectedIndex = dzikirTypeSelect.selectedIndex;
       if (selectedIndex < 0) return;
-      // Contoh: hanya izinkan edit untuk opsi non-default (anggap 5 opsi pertama default)
       if (selectedIndex < 5) {
         showNotification("Dzikir default tidak dapat diedit!", "#e74c3c");
         return;
