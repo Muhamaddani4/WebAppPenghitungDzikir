@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar - Aplikasi Penghitung Dzikir</title>
+  <style>
+    /* Animasi fadeInUp */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translate3d(0,40px,0); }
+      to { opacity: 1; transform: translate3d(0,0,0); }
+    }
+    body {
+      background-color: #f5f6fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeInUp 1s ease;
+    }
+    h1 {
+      color: #3498db;
+      margin-bottom: 20px;
+    }
+    form input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    form button {
+      width: 100%;
+      padding: 12px;
+      background-color: #27ae60;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    form button:hover {
+      background-color: #1e8449;
+    }
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    p a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    p a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Daftar Akun</h1>
+    <form id="registerForm">
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" required>
+      <button type="submit">Daftar</button>
+    </form>
+    <p>Sudah punya akun? <a href="login.html">Login disini</a></p>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if(password !== confirmPassword) {
+        alert("Password dan konfirmasi password tidak cocok!");
+        return;
+      }
+      
+      // Ambil data pengguna yang sudah tersimpan atau inisialisasi sebagai array kosong
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      
+      // Periksa apakah username sudah ada
+      if(users.find(user => user.username.toLowerCase() === username.toLowerCase())) {
+        alert("Username sudah terdaftar, silakan pilih yang lain.");
+        return;
+      }
+      
+      // Simpan data pengguna (password disimpan secara plain text untuk demo saja)
+      users.push({ username, password });
+      localStorage.setItem('users', JSON.stringify(users));
+      alert("Pendaftaran berhasil! Silakan login.");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
