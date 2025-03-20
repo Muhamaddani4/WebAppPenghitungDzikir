@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aplikasi Penghitung Dzikir</title>
   <style>
+    /* Mencegah penyeleksian teks untuk sebagian besar elemen */
+    body, .container, h1, p, div, span, button, .dzikir-actions {
+      -webkit-user-select: none; /* Chrome/Safari */
+      -moz-user-select: none;    /* Firefox */
+      -ms-user-select: none;     /* IE10+ */
+      user-select: none;
+    }
+    /* Namun, izinkan pada input supaya pengguna dapat mengetik */
+    input {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+    
     * {
       margin: 0;
       padding: 0;
@@ -340,9 +355,9 @@
         <option value="astagfirullah">Astagfirullah</option>
         <option value="lailahaillallah">Laa ilaha illallah</option>
         <option value="hasbunallah waniikmalwakil">Hasbunallah wa niikmal wakil - 450x</option>
-        <option value="lailaha ila anta">lailaha ila anta - 100x </option>
-        <option value="subhanallah wabihamdih">subhanallah wabihamdih - 100x </option>
-        <option value="la haula wala quwwata illa bilah">la haula wala quwwata illa bilah - 100x </option>
+        <option value="lailaha ila anta">lailaha ila anta - 100x</option>
+        <option value="subhanallah wabihamdih">subhanallah wabihamdih - 100x</option>
+        <option value="la haula wala quwwata illa bilah">la haula wala quwwata illa bilah - 100x</option>
         <option value="sholawatnabimuhammad">Allahumma shalli 'ala Muhammad - 100x</option>
         <option value="sholawatnabimuhammad2">Allahumma shalli 'ala Muhammad wa 'ala ali Sayidina Muhammad</option>
         <option value="Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni">Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni</option>
@@ -629,7 +644,6 @@
         });
         return;
       }
-      // Lanjutkan fungsi incrementCounter
       if (targetCount > 0 && count >= targetCount) {
         showNotification(`Anda telah mencapai target ${targetCount} kali. Silakan reset untuk memulai lagi.`, "#f39c12");
         return;
@@ -724,6 +738,14 @@
     updateDisplay();
     updateHistoryList();
     updateButtonsState();
+
+    // Menonaktifkan copy dan context menu agar teks tidak bisa disalin
+    document.addEventListener('copy', function(e) {
+      e.preventDefault();
+    });
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
 
     // Dukungan keyboard
     document.addEventListener('keydown', function(event) {
