@@ -870,6 +870,16 @@
         }
       }
     });
+    
+  // Contoh penggunaan fetch untuk mengambil data dari API Vercel
+  fetch('https://my-api-project.vercel.app/api/users')
+    .then(response => response.json())
+    .then(data => {
+      console.log('Data pengguna:', data);
+      // Lakukan pengolahan data atau tampilkan ke halaman sesuai kebutuhan
+    })
+    .catch(error => console.error('Error:', error));
+    
   </script>
 </body>
 </html>
