@@ -68,23 +68,66 @@ nav ul li a {
   color: var(--nav-text);
   font-size: 16px;
   transition: color 0.3s ease;
+  user-select: none; /* Untuk browser modern */
+  -webkit-user-select: none; /* Untuk Safari */
+  -moz-user-select: none; /* Untuk Firefox */
+  -ms-user-select: none; /* Untuk Internet Explorer/Edge */
 }
 nav ul li a:hover {
   color: var(--accent-color);
 }
-/* Tombol dark mode sudah jadi bagian ul, tanpa posisi fixed */
-.mode-toggle {
-  background-color: var(--btn-bg);
-  border: none;
-  padding: 5px 8px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  color: var(--nav-text);
+/* Styling container untuk tombol navigasi */
+.nav-buttons {
+  display: flex;
+  align-items: center;
 }
-.mode-toggle:hover {
-  background-color: var(--btn-hover);
-  transform: scale(1.05);
+
+/* Gaya dasar untuk tombol navigasi */
+.nav-button {
+  background-color: #3498db; /* Warna latar belakang hijau */
+  border: none;
+  color: white;
+  padding: 7px 7px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-button:hover {
+  background-color: #3498db; /* Warna latar belakang saat hover */
+  transform: scale(1.1); /* Memperbesar tombol saat hover */
+}
+
+.nav-button:active {
+  background-color: #3498db; /* Warna latar belakang saat tombol ditekan */
+  transform: scale(0.9); /* Mengecilkan tombol saat ditekan */
+}
+.mode-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mode-toggle img {
+  width: 35x;  /* Atur ukuran sesuai keinginan */
+  height: 35px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Animasi rotasi saat transisi */
+.mode-toggle img.rotate {
+  transform: rotate(360deg);
+}
+
+/* Animasi saat hover (opsional) */
+.mode-toggle:hover img {
+  transform: scale(1.2);
 }
     body, .container, h1, p, div, span, button, .dzikir-actions {
       -webkit-user-select: none;

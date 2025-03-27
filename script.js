@@ -1,21 +1,49 @@
-    // Dark mode toggle
-    const modeToggle = document.getElementById('modeToggle');
-    const currentMode = localStorage.getItem('mode') || 'light';
-    if(currentMode === 'dark'){
-      document.body.classList.add('dark-mode');
-      modeToggle.textContent = 'Light Mode';
+document.querySelectorAll('nav ul li a').forEach(function(link) {
+  link.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+  });
+  link.addEventListener('mousedown', function(e) {
+    if (e.button === 2) { // Tombol kanan mouse
+      e.preventDefault();
     }
-    modeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      if(document.body.classList.contains('dark-mode')){
-        modeToggle.textContent = 'Light Mode';
-        localStorage.setItem('mode', 'dark');
-      } else {
-        modeToggle.textContent = 'Dark Mode';
-        localStorage.setItem('mode', 'light');
-      }
-    });
-    
+  });
+});
+
+const modeToggle = document.getElementById('modeToggle');
+const modeIcon = document.getElementById('modeIcon');
+const currentMode = localStorage.getItem('mode') || 'light';
+
+// Fungsi untuk memperbarui ikon dengan animasi
+function updateIcon() {
+  if (document.body.classList.contains('dark-mode')) {
+    modeIcon.src = 'moon.png'; // Gambar ikon matahari untuk mode terang
+  } else {
+    modeIcon.src = 'sun.png'; // Gambar ikon bulan untuk mode gelap
+  }
+  // Tambahkan animasi rotasi
+  modeIcon.classList.add('rotate');
+  setTimeout(() => {
+    modeIcon.classList.remove('rotate');
+  }, 500); // Waktu animasi sesuai dengan CSS transition
+}
+
+// Set mode awal dari localStorage
+if (currentMode === 'dark') {
+  document.body.classList.add('dark-mode');
+}
+updateIcon();
+
+// Event listener untuk toggle mode
+modeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  if (document.body.classList.contains('dark-mode')) {
+    localStorage.setItem('mode', 'dark');
+  } else {
+    localStorage.setItem('mode', 'light');
+  }
+  updateIcon();
+});
+
     // Modal Logout functions
     function openLogoutModal() {
       document.getElementById('logoutModal').style.display = 'flex';
