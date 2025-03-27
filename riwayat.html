@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Riwayat Dzikir - DzikirApp</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Library untuk export PDF (jsPDF dan AutoTable) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    /* Navbar layout baru: logo di atas, menu di bawah (sama seperti halaman utama) */
+    nav {
+      background-color: var(--nav-bg);
+      width: 100%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px 20px;
+      transition: background-color 0.5s ease;
+    }
+    .nav-logo {
+      width: 100%;
+      text-align: center;
+      padding: 5px 0;
+    }
+    .nav-logo .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--nav-text);
+    }
+    .nav-menu {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 5px;
+    }
+    .nav-menu ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+    .nav-menu ul li a {
+      text-decoration: none;
+      color: var(--nav-text);
+      font-size: 16px;
+      transition: color 0.3s ease;
+      user-select: none;
+    }
+    .nav-menu ul li a:hover {
+      color: var(--accent-color);
+    }
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+    }
+    .mode-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+    .mode-toggle img {
+      width: 35px;
+      height: 35px;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+    .mode-toggle:hover img {
+      transform: scale(1.2);
+    }
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--nav-text);
+    }
+    /* Dropdown styling untuk ikon tiga titik */
+    .dropdown-menu {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background-color: var(--nav-bg);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      display: none;
+      flex-direction: column;
+      min-width: 150px;
+      z-index: 1100;
+    }
+    .dropdown-menu a {
+      padding: 10px 15px;
+      text-decoration: none;
+      color: var(--nav-text);
+      display: block;
+      transition: background 0.3s;
+    }
+    .dropdown-menu a:hover {
+      background: var(--btn-hover);
+    }
+    /* Styling konten riwayat (sama seperti bagian riwayat di index.html) */
+    .content {
+      margin-top: 100px; /* Sesuaikan dengan tinggi navbar */
+      padding: 20px;
+      width: 100%;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      /* Override warna teks menjadi hitam meskipun mode malam aktif */
+      color: #000 !important;
+    }
+    .content h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #000 !important;
+    }
+    .history-container {
+      margin-top: 20px;
+    }
+    .history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .history-item {
+      background: #e9f7fe;
+      margin-bottom: 15px;
+      padding: 15px 20px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s forwards;
+      color: #000; /* Pastikan teks di dalam item tampil hitam */
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    /* Tombol untuk menghapus seluruh riwayat */
+    #clear-history-btn {
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: block;
+      margin: 20px auto 0;
+    }
+    #clear-history-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  <!-- Notifikasi dan Modal (sama seperti di index.html) -->
+  <div id="notification" class="notification"></div>
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-body"></div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav>
+    <!-- Baris Atas: Logo -->
+    <div class="nav-logo">
+      <div class="logo">DzikirApp</div>
+    </div>
+    <!-- Baris Bawah: Menu Navigasi -->
+    <div class="nav-menu">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#">Tentang</a></li>
+        <li><a href="#">Kontak</a></li>
+      </ul>
+      <div class="nav-controls">
+        <button class="mode-toggle" id="modeToggle">
+          <img src="moon.png" alt="Mode Icon" id="modeIcon" oncontextmenu="return false;">
+        </button>
+        <button class="menu-toggle" id="menuToggle">&#8942;</button>
+        <div class="dropdown-menu" id="dropdownMenu">
+<a href="logout.html" onclick="openLogoutModal(event)">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Konten Utama Riwayat Dzikir -->
+  <div class="content">
+    <h1>Riwayat Dzikir</h1>
+    <div class="history-container">
+      <ul class="history-list" id="history-list">
+        <!-- Daftar riwayat akan diisi secara dinamis dari localStorage -->
+      </ul>
+      <!-- Tombol untuk menghapus seluruh riwayat -->
+      <button id="clear-history-btn">Hapus Semua Riwayat</button>
+    </div>
+  </div>
+
+  <!-- Modal Logout (sama seperti di index.html) -->
+  <div class="modal1" id="logoutModal">
+    <div class="modal-content">
+      <h2>Konfirmasi Logout</h2>
+      <p>Apakah Anda yakin ingin keluar?</p>
+      <div class="modal-buttons">
+        <button class="btn-confirm" onclick="logout()">Ya</button>
+        <button class="btn-cancel1" onclick="closeLogoutModal()">Batal</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const historyList = document.getElementById('history-list');
+      const clearHistoryBtn = document.getElementById('clear-history-btn');
+      let dzikirHistory = JSON.parse(localStorage.getItem('dzikirHistory')) || [];
+
+      function updateHistoryDisplay() {
+        historyList.innerHTML = '';
+        if (dzikirHistory.length === 0) {
+          historyList.innerHTML = '<li>Tidak ada riwayat dzikir.</li>';
+        } else {
+          dzikirHistory.forEach(session => {
+            const listItem = document.createElement('li');
+            listItem.className = 'history-item';
+            listItem.innerHTML = `
+              <div>
+                <strong>${session.type}</strong><br>
+                Jumlah: ${session.count} dari ${session.target || '∞'}<br>
+                Tanggal: ${session.date}
+              </div>
+              <button class="delete-btn" data-id="${session.id}">Hapus</button>
+            `;
+            historyList.appendChild(listItem);
+          });
+        }
+      }
+
+      updateHistoryDisplay();
+
+      // Event listener untuk menghapus item riwayat individu
+      historyList.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-btn')) {
+          const sessionId = parseInt(event.target.getAttribute('data-id'));
+          dzikirHistory = dzikirHistory.filter(session => session.id !== sessionId);
+          localStorage.setItem('dzikirHistory', JSON.stringify(dzikirHistory));
+          updateHistoryDisplay();
+        }
+      });
+
+      // Event listener untuk tombol "Hapus Semua Riwayat"
+      clearHistoryBtn.addEventListener('click', function() {
+        if (confirm('Anda yakin ingin menghapus seluruh riwayat dzikir?')) {
+          dzikirHistory = [];
+          localStorage.removeItem('dzikirHistory');
+          updateHistoryDisplay();
+        }
+      });
+    });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

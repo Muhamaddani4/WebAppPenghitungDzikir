@@ -169,6 +169,11 @@ nav ul li a:hover {
       margin-bottom: 20px;
       animation: slideInFadeIn 1s ease-out;
     }
+    h3 {
+      color: #3498db;
+      margin-bottom: 20px;
+      animation: slideInFadeIn 1s ease-out;
+    }
     .dzikir-selector {
       margin-bottom: 10px;
     }
@@ -301,6 +306,7 @@ nav ul li a:hover {
       color: white;
     }
     .save-btn:hover {
+      text-decoration: none;
       background-color: #27ae60;
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -333,6 +339,38 @@ nav ul li a:hover {
       margin-bottom: 10px;
       color: #3498db;
     }
+    
+    .history-item {
+  background: #e9f7fe;
+  margin-bottom: 15px;
+  padding: 15px 20px;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+   /* Tombol hapus khusus untuk tiap item */
+.delete-btn {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+  transform: scale(1.05);
+}
+    
     .history-list {
       list-style: none;
       padding: 0;
@@ -363,7 +401,7 @@ nav ul li a:hover {
       text-align: center;
     }
     .notification.show {
-      top: 80px;
+      top: 120px;
       animation: shake 0.5s ease;
     }
     .floating-particles {
@@ -756,3 +794,30 @@ nav ul li a:hover {
         transform: translateY(0) rotate(0deg) scale(1);
       }
     }
+    
+    .loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: none; /* tersembunyi secara default */
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

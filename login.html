@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login - Aplikasi Penghitung Dzikir</title>
   <style>
+    /* CSS Banner Login */
+    .login-banner {
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .login-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Animasi & styling lain seperti sebelumnya */
     @keyframes gradientAnimation {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -120,16 +132,29 @@
       margin-top: 15px;
       font-size: 14px;
     }
-    /* Link tidak bisa diseleksi/dicopy, tapi tetap bisa diklik */
     p a {
       color: #4A90E2;
       text-decoration: none;
       user-select: none;
       -webkit-user-select: none;
     }
+    /* Style untuk loading overlay (jika diperlukan) */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
   </style>
 </head>
 <body>
+  
   <div class="container" id="container">
     <h1>Login</h1>
     <form id="loginForm">
@@ -148,9 +173,9 @@
     <p>Belum punya akun? <a href="register.html" oncontextmenu="return false;" style="user-select: none;">Daftar disini</a></p>
   </div>
 
-  <!-- Loading overlay dengan spinner dan teks redirect -->
-  <div class="loading-overlay" id="loadingOverlay">
-    
+  <!-- Loading overlay (opsional) -->
+  <div class="loading-overlay" id="loadingOverlay"></div>
+
   <script>
     // Refresh halaman saat event scroll (wheel) terjadi
     window.addEventListener('wheel', function(e) {
