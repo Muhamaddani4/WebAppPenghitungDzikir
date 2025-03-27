@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aplikasi Penghitung Dzikir</title>
+  <link rel="stylesheet" href="style.css">
+    <!-- Library untuk export PDF (jsPDF dan AutoTable) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+<body>
+  <!-- Elemen Notifikasi -->
+  <div id="notification" class="notification"></div>
+
+  <!-- Modal Pop-up -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-body"></div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">DzikirApp</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#">Tentang</a></li>
+      <li><a href="#">Kontak</a></li>
+      <li>
+        <button class="mode-toggle" id="modeToggle">Dark Mode</button>
+      </li>
+    </ul>
+  </nav>
+  
+  <!-- Tombol Logout (selalu di pojok kanan atas) -->
+  <div class="logout-container">
+    <button onclick="openLogoutModal()">Logout</button>
+  </div>
+  
+  <!-- Konten utama -->
+  <div class="content">
+    <h1>Selamat Datang di DzikirApp</h1>
+
+    <!-- Modal Logout -->
+  <div class="modal1" id="logoutModal">
+    <div class="modal-content">
+      <h2>Konfirmasi Logout</h2>
+      <p>Apakah Anda yakin ingin keluar?</p>
+      <div class="modal-buttons">
+        <button class="btn-confirm" onclick="logout()">Ya</button>
+        <button class="btn-cancel1" onclick="closeLogoutModal()">Batal</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="floating-particles" id="particles-container"></div>
+    <h2>Aplikasi Penghitung Dzikir</h2>
+    <div class="dzikir-selector">
+      <select id="dzikir-type">
+        <option value="ListDzikir" hidden>List Dzikir:</option>
+        <option value="subhanallah">Subhanallah</option>
+        <option value="alhamdulillah">Alhamdulillah</option>
+        <option value="allahuakbar">Allahu Akbar</option>
+        <option value="astagfirullah">Astagfirullah</option>
+        <option value="lailahaillallah">Laa ilaha illallah</option>
+        <option value="hasbunallah waniikmalwakil">Hasbunallah wa niikmal wakil - 450x</option>
+        <option value="lailaha ila anta">lailaha ila anta - 100x</option>
+        <option value="subhanallah wabihamdih">subhanallah wabihamdih - 100x</option>
+        <option value="la haula wala quwwata illa bilah">la haula wala quwwata illa bilah - 100x</option>
+        <option value="sholawatnabimuhammad">Allahumma shalli 'ala Muhammad - 100x</option>
+        <option value="sholawatnabimuhammad2">Allahumma shalli 'ala Muhammad wa 'ala ali Sayidina Muhammad</option>
+        <option value="Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni">Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni</option>
+      </select>
+      <!-- Tampilkan teks dzikir yang sedang dipilih -->
+      <div id="dzikir-display"></div>
+      <!-- Tombol aksi dzikir -->
+      <div class="dzikir-actions">
+        <button id="add-dzikir-btn">Tambah Dzikir</button>
+        <button id="edit-dzikir-btn">Edit Dzikir</button>
+        <button id="delete-dzikir-btn">Hapus Dzikir</button>
+        <button id="clear-history-btn">Hapus Riwayat Dzikir</button>
+      </div>
+    </div>
+    
+    <div class="custom-target">
+      <input type="number" id="target-count" placeholder="Target jumlah (misal: 33, 99, 100)">
+    </div>
+    
+    <div class="counter-display" id="counter">0</div>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+    </div>
+    
+    <div class="target-display">
+      <span id="current-count">0</span>/<span id="target-display">0</span>
+    </div>
+    
+    <div class="buttons">
+      <!-- Tombol dikontrol via kelas "btn-disabled" -->
+      <button class="count-btn btn-disabled" id="count-btn">Hitung (+1)</button>
+      <button class="reset-btn btn-disabled" id="reset-btn">Reset</button>
+      <button class="save-btn btn-disabled" id="save-btn">Simpan Sesi</button>
+    </div>
+    
+    <!-- Tombol export ke PDF -->
+    <div class="export-buttons">
+      <button id="export-pdf-btn">Export ke PDF</button>
+    </div>
+    
+    <div class="history">
+      <h2>Riwayat Dzikir</h2>
+      <ul class="history-list" id="history-list"></ul>
+    </div>
+  </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

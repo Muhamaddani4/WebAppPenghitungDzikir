@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Daftar - Aplikasi Penghitung Dzikir</title>
+  <style>
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Animasi refresh: fade out dan scale down */
+    @keyframes refreshAnimation {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.8); }
+    }
+    .refreshing {
+      animation: refreshAnimation 0.5s forwards;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff, #a1c4fd);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.97);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+      position: relative;
+    }
+    h1 {
+      color: #4A90E2;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .input-group {
+      position: relative;
+      margin: 15px 0;
+      text-align: left;
+    }
+    .input-group input {
+      width: 300px;
+      padding: 12px 40px 12px 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: #4A90E2;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+    }
+    .toggle-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      -webkit-user-drag: none;
+      user-select: none;
+    }
+    .toggle-icon:hover {
+      opacity: 1;
+    }
+    .error {
+      color: #e74c3c;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      margin-top: 10px;
+    }
+    button:hover {
+      transform: scale(1.02);
+    }
+    /* Tombol refresh dengan gaya menarik */
+    #refreshButton {
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      margin-top: 15px;
+    }
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    /* Link yang tidak bisa diseleksi/dicopy, tapi tetap bisa diklik */
+    p a {
+      color: #4A90E2;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <h1>Daftar Akun</h1>
+    <form id="registerForm">
+      <div class="input-group">
+        <input type="text" id="username" name="username" placeholder="Username" required>
+        <div id="usernameError" class="error"></div>
+      </div>
+      <div class="input-group">
+        <input type="email" id="email" name="email" placeholder="Email" required>
+        <div id="emailError" class="error"></div>
+      </div>
+      <!-- Password Field dengan Toggle -->
+      <div class="input-group">
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <img src="show.png" alt="Toggle" class="toggle-icon" id="togglePassword" oncontextmenu="return false;">
+        <div id="passwordError" class="error"></div>
+      </div>
+      <!-- Confirm Password Field dengan Toggle -->
+      <div class="input-group">
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Konfirmasi Password" required>
+        <img src="show.png" alt="Toggle" class="toggle-icon" id="toggleConfirmPassword" oncontextmenu="return false;">
+        <div id="confirmPasswordError" class="error"></div>
+      </div>
+      <button type="submit">Daftar</button>
+    </form>
+    <button id="refreshButton">Refresh</button>
+    <!-- Link sekarang sudah bisa diklik untuk navigasi ke halaman login -->
+    <p>Sudah punya akun? <a href="login.html" oncontextmenu="return false;" style="user-select: none;">Login disini</a></p>
+  </div>
+
+  <script>
+    // Refresh halaman ketika event scroll (wheel) terjadi
+    window.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      location.reload();
+    }, { passive: false });
+
+    // Tombol refresh: animasi refresh sebelum reload
+    const refreshButton = document.getElementById('refreshButton');
+    const container = document.getElementById('container');
+    refreshButton.addEventListener('click', function() {
+      container.classList.add('refreshing');
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('registerForm');
+      const usernameInput = document.getElementById('username');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      
+      const usernameError = document.getElementById('usernameError');
+      const emailError = document.getElementById('emailError');
+      const passwordError = document.getElementById('passwordError');
+      const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+      // Fungsi setup toggle password
+      function setupToggle(toggleElement, inputElement) {
+        toggleElement.addEventListener('click', function() {
+          const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+          inputElement.setAttribute('type', type);
+          toggleElement.src = type === 'password' ? "show.png" : "hide.png";
+        });
+      }
+      const togglePassword = document.getElementById('togglePassword');
+      const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+      setupToggle(togglePassword, passwordInput);
+      setupToggle(toggleConfirmPassword, confirmPasswordInput);
+
+      // Fungsi validasi input
+      function validateUsername() {
+        const username = usernameInput.value.trim();
+        if (username.length < 3) {
+          usernameError.textContent = 'Username minimal 3 karakter';
+          return false;
+        }
+        usernameError.textContent = '';
+        return true;
+      }
+      function validateEmail() {
+        const email = emailInput.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          emailError.textContent = 'Format email tidak valid';
+          return false;
+        }
+        emailError.textContent = '';
+        return true;
+      }
+      function validatePassword() {
+        const password = passwordInput.value;
+        if (password.length < 8) {
+          passwordError.textContent = 'Password minimal 8 karakter';
+          return false;
+        }
+        passwordError.textContent = '';
+        return true;
+      }
+      function validateConfirmPassword() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+        if (password !== confirmPassword) {
+          confirmPasswordError.textContent = 'Konfirmasi password tidak cocok';
+          return false;
+        }
+        confirmPasswordError.textContent = '';
+        return true;
+      }
+      function safeBtoa(str) {
+        try {
+          return btoa(unescape(encodeURIComponent(str)));
+        } catch (e) {
+          console.error('Encoding password error:', e);
+          return str;
+        }
+      }
+
+      usernameInput.addEventListener('input', validateUsername);
+      emailInput.addEventListener('input', validateEmail);
+      passwordInput.addEventListener('input', validatePassword);
+      confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const isUsernameValid = validateUsername();
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+        const isConfirmPasswordValid = validateConfirmPassword();
+
+        if (isUsernameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+          let users = JSON.parse(localStorage.getItem('users')) || [];
+          const emailExists = users.some(user => 
+            user.email.toLowerCase() === emailInput.value.trim().toLowerCase()
+          );
+          if (emailExists) {
+            emailError.textContent = 'Email sudah terdaftar';
+            return;
+          }
+          const newUser = {
+            username: usernameInput.value.trim(),
+            email: emailInput.value.trim(),
+            password: safeBtoa(passwordInput.value)
+          };
+          users.push(newUser);
+          try {
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Registrasi berhasil! Silakan login.');
+            window.location.href = 'login.html';
+          } catch (error) {
+            alert('Gagal menyimpan data. Coba lagi.');
+            console.error(error);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
