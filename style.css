@@ -65,7 +65,7 @@ nav ul {
 }
 nav ul li a {
   text-decoration: none;
-  color: var(--nav-text);
+  color: var(--nav-bg);
   font-size: 16px;
   transition: color 0.3s ease;
   user-select: none; /* Untuk browser modern */
@@ -74,7 +74,7 @@ nav ul li a {
   -ms-user-select: none; /* Untuk Internet Explorer/Edge */
 }
 nav ul li a:hover {
-  color: var(--accent-color);
+  color: var(--nav-bg);
 }
 /* Styling container untuk tombol navigasi */
 .nav-buttons {
@@ -148,7 +148,7 @@ nav ul li a:hover {
       font-family: 'Arial', sans-serif;
     }
     .container {
-      background-color: white;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e0e0e0 100%);
       border-radius: 15px;
       box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       padding: 30px;
@@ -206,7 +206,7 @@ nav ul li a:hover {
       background-color: #1e8449;
     }
     .custom-target input {
-      width: 300px;
+      width: 250px;
       height: 40px;
       font-size: 18px;
       padding: 5px 10px;
@@ -530,6 +530,147 @@ nav ul li a:hover {
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* ------------------------------ */
+/* Bagian Contact Section */
+/* ------------------------------ */
+
+.contact-section {
+  padding: 80px 20px;
+  min-height: calc(100vh - 70px); /* menyesuaikan tinggi layar minus navbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ebf8ff 100%);
+}
+
+.contact-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.contact-header h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.contact-header p {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Container form */
+.contact-container {
+  background-color: #fff;
+  max-width: 600px;
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  padding: 30px;
+}
+
+/* Form */
+.contact-form .form-group {
+  margin-bottom: 20px;
+}
+
+.contact-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form input[type="tel"],
+.contact-form input[type="number"],
+.contact-form input[type="date"],
+.contact-form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #333;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #4caf50; /* ganti warna sesuai preferensi */
+}
+
+.contact-form textarea {
+  resize: vertical;
+}
+
+.btn-submit {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-submit:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.btn-submit:active {
+  background-color: #3e8e41;
+  transform: scale(0.95);
+}
+
+/* Efek partikel/gelembung di background (opsional) */
+.floating-particles-contact {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Supaya tidak mengganggu klik form */
+  background-image: url('bubbles.png'); /* Ganti dengan gambar partikel/gelembung kecil */
+  background-repeat: repeat;
+  opacity: 0.05;
+  animation: floatParticles 30s infinite linear;
+}
+
+@keyframes floatParticles {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 1000px 1000px;
+  }
+}
+
+/* ------------------------------ */
+/* Responsive Design */
+/* ------------------------------ */
+
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 40px 20px;
+  }
+
+  .contact-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .contact-container {
+    padding: 20px;
+  }
 }
 
 /* Responsif */
