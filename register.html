@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* Menggunakan CSS yang sama persis dengan login.html untuk konsistensi */
+    /* CSS Gabungan untuk Login & Register */
     :root {
       --font-family: 'Poppins', sans-serif;
       --text-color: #e6edf3;
@@ -30,16 +30,19 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      /* --- BACKGROUND GAMBAR BARU --- */
       background: url('https://images.unsplash.com/photo-1536782376847-5c9d14d97cc0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
       background-size: cover;
-      filter: brightness(0.9);
+      overflow: hidden;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
-    .auth-container {
-      width: 100%;
-      max-width: 420px;
-      padding: 20px;
+    input, textarea {
+      -webkit-user-select: auto;
+      -ms-user-select: auto;
+      user-select: auto;
     }
+    .auth-container { width: 100%; max-width: 420px; padding: 20px; }
     .auth-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -54,81 +57,45 @@
       to { opacity: 1; transform: scale(1); }
     }
     .auth-card h1 {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 30px;
+      text-align: center; font-size: 2rem;
+      font-weight: 600; margin-bottom: 30px;
     }
-    .input-group {
-      position: relative;
-      margin-bottom: 25px;
-    }
+    .input-group { position: relative; margin-bottom: 25px; }
     .input-group input {
-      width: 100%;
-      background: transparent;
+      width: 100%; background: transparent;
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 14px 14px 14px 45px;
-      font-family: var(--font-family);
-      color: var(--text-color);
-      font-size: 1rem;
-      transition: border-color var(--transition-speed);
+      border-radius: 10px; padding: 14px 45px;
+      font-family: var(--font-family); color: var(--text-color);
+      font-size: 1rem; transition: border-color var(--transition-speed);
     }
-    .input-group input:focus {
-      outline: none;
-      border-color: var(--accent-color);
-    }
+    .input-group input:focus { outline: none; border-color: var(--accent-color); }
     .input-group .icon {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-secondary);
-      font-size: 1.2rem;
+      position: absolute; left: 15px; top: 50%;
+      transform: translateY(-50%); color: var(--text-secondary);
+      font-size: 1.2rem; pointer-events: none;
     }
     .btn {
-      width: 100%;
-      border: 1px solid var(--accent-color);
-      border-radius: 10px;
-      background-color: var(--accent-color);
-      padding: 14px 20px;
-      font-family: var(--font-family);
-      font-weight: 600;
-      color: white;
-      cursor: pointer;
+      width: 100%; border: 1px solid var(--accent-color);
+      border-radius: 10px; background-color: var(--accent-color);
+      padding: 14px 20px; font-family: var(--font-family);
+      font-weight: 600; color: white; cursor: pointer;
       transition: all var(--transition-speed) ease;
     }
-    .btn:hover {
-      background-color: transparent;
-      color: var(--accent-color);
-    }
+    .btn:hover { background-color: transparent; color: var(--accent-color); }
     .auth-switch {
-      text-align: center;
-      margin-top: 20px;
-      color: var(--text-secondary);
+      text-align: center; margin-top: 20px; color: var(--text-secondary);
     }
-    .auth-switch a {
-      color: var(--accent-color);
-      text-decoration: none;
-      font-weight: 600;
-    }
+    .auth-switch a { color: var(--accent-color); text-decoration: none; font-weight: 600; }
     .error {
-      color: var(--danger-color);
-      font-size: 0.8rem;
-      margin-top: 5px;
-      min-height: 1.2em;
+      color: var(--danger-color); font-size: 0.8rem;
+      margin-top: 5px; min-height: 1.2em;
     }
-    /* --- STYLE ICON SHOW/HIDE PASSWORD BARU --- */
     .toggle-icon {
       position: absolute; right: 15px; top: 50%;
       transform: translateY(-50%); cursor: pointer;
       width: 24px; height: 24px;
-      color: var(--text-secondary);
     }
-    .toggle-icon img {
-      width: 100%; height: 100%;
-      vertical-align: middle;
-    }
+    .toggle-icon img { width: 100%; height: 100%; vertical-align: middle; }
   </style>
 </head>
 <body>
@@ -138,24 +105,28 @@
         <h1>Buat Akun Baru</h1>
         <form id="registerForm" novalidate>
             <div class="input-group">
-                <span class="icon">&#128100;</span> <input type="text" id="username" placeholder="Username" required>
+                <span class="icon">&#128100;</span>
+                <input type="text" id="username" placeholder="Username" required>
                 <div id="usernameError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#9993;</span> <input type="email" id="email" placeholder="Email" required>
+                <span class="icon">&#9993;</span>
+                <input type="email" id="email" placeholder="Email" required>
                 <div id="emailError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#128274;</span> <input type="password" id="password" placeholder="Password" required>
+                <span class="icon">&#128274;</span>
+                <input type="password" id="password" placeholder="Password" required>
                 <span id="togglePassword" class="toggle-icon">
-                    <img src="hide.png" alt="Hide Password">
+                    <img src="hide.png" alt="Toggle Password">
                 </span>
                 <div id="passwordError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#128274;</span> <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" required>
+                <span class="icon">&#128274;</span>
+                <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" required>
                 <span id="toggleConfirmPassword" class="toggle-icon">
-                    <img src="hide.png" alt="Hide Password">
+                    <img src="hide.png" alt="Toggle Password">
                 </span>
                 <div id="confirmPasswordError" class="error"></div>
             </div>
@@ -166,6 +137,9 @@
   </main>
   
   <script>
+    // Fitur Refresh On Scroll
+    window.addEventListener('wheel', (e) => { e.preventDefault(); window.location.reload(); }, { passive: false });
+
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('registerForm');
       const usernameInput = document.getElementById('username');
@@ -180,12 +154,11 @@
       function setupToggle(toggleElementId, inputElement) {
         const toggle = document.getElementById(toggleElementId);
         const toggleIcon = toggle ? toggle.querySelector('img') : null;
-
         if (toggle && toggleIcon) {
             toggle.addEventListener('click', function() {
                 const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
                 inputElement.setAttribute('type', type);
-                toggleIcon.src = type === 'password' ? 'hide.png' : 'show.png'; // Ganti ikon
+                toggleIcon.src = type === 'password' ? 'hide.png' : 'show.png';
                 toggleIcon.alt = type === 'password' ? 'Hide Password' : 'Show Password';
             });
         }
@@ -193,52 +166,36 @@
       setupToggle('togglePassword', passwordInput);
       setupToggle('toggleConfirmPassword', confirmPasswordInput);
       
-      function validateUsername() { /* ... kode tetap sama ... */
-        if (usernameInput.value.trim().length < 3) { 
-          usernameError.textContent = 'Username minimal 3 karakter.'; return false; 
-        }
+      function validateUsername() {
+        if (usernameInput.value.trim().length < 3) { usernameError.textContent = 'Username min. 3 karakter.'; return false; }
         usernameError.textContent = ''; return true;
       }
-      function validateEmail() { /* ... kode tetap sama ... */
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) { 
-          emailError.textContent = 'Format email tidak valid.'; return false; 
-        }
+      function validateEmail() {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) { emailError.textContent = 'Format email tidak valid.'; return false; }
         emailError.textContent = ''; return true;
       }
-      function validatePassword() { /* ... kode tetap sama ... */
-        if (passwordInput.value.length < 8) { 
-          passwordError.textContent = 'Password minimal 8 karakter.'; return false; 
-        }
+      function validatePassword() {
+        if (passwordInput.value.length < 8) { passwordError.textContent = 'Password min. 8 karakter.'; return false; }
         passwordError.textContent = ''; return true;
       }
-      function validateConfirmPassword() { /* ... kode tetap sama ... */
-        if (passwordInput.value !== confirmPasswordInput.value) {
-          confirmPasswordError.textContent = 'Konfirmasi password tidak cocok.'; return false;
-        }
+      function validateConfirmPassword() {
+        if (passwordInput.value !== confirmPasswordInput.value) { confirmPasswordError.textContent = 'Password tidak cocok.'; return false; }
         confirmPasswordError.textContent = ''; return true;
       }
 
       if (form) {
           form.addEventListener('submit', e => {
             e.preventDefault();
-            const valid = validateUsername() && validateEmail() && validatePassword() && validateConfirmPassword();
-            if (!valid) return;
-
-            let users = JSON.parse(localStorage.getItem('users')) || [];
-            if (users.some(u => u.email.toLowerCase() === emailInput.value.trim().toLowerCase())) { 
-              emailError.textContent = 'Email sudah terdaftar.'; return; 
+            if (validateUsername() && validateEmail() && validatePassword() && validateConfirmPassword()) {
+              let users = JSON.parse(localStorage.getItem('users')) || [];
+              if (users.some(u => u.email.toLowerCase() === emailInput.value.trim().toLowerCase())) { 
+                emailError.textContent = 'Email sudah terdaftar.'; return; 
+              }
+              users.push({ username: usernameInput.value.trim(), email: emailInput.value.trim(), password: btoa(passwordInput.value), role: 'user' });
+              localStorage.setItem('users', JSON.stringify(users));
+              alert('Registrasi berhasil! Silakan login.');
+              window.location.href = 'login.html';
             }
-            
-            users.push({
-              username: usernameInput.value.trim(),
-              email: emailInput.value.trim(),
-              password: btoa(passwordInput.value),
-              role: 'user'
-            });
-            
-            localStorage.setItem('users', JSON.stringify(users));
-            alert('Registrasi berhasil! Silakan login.');
-            window.location.href = 'login.html';
           });
       }
     });
