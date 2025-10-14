@@ -155,11 +155,49 @@
       }
       setupToggle(document.getElementById('togglePassword'), passwordInput);
       setupToggle(document.getElementById('toggleConfirmPassword'), confirmPasswordInput);
+      
+      // --- PERBAIKAN DI EMPAT FUNGSI INI ---
+      function validateUsername() {
+        const val = usernameInput.value.trim();
+        if (val.length < 3) { 
+            usernameError.textContent = 'Username minimal 3 karakter'; 
+            return false; 
+        }
+        usernameError.textContent = ''; 
+        return true;
+      }
+      
+      function validateEmail() {
+        const val = emailInput.value.trim();
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regex.test(val)) { 
+            emailError.textContent = 'Format email tidak valid'; 
+            return false; 
+        }
+        emailError.textContent = ''; 
+        return true;
+      }
+      
+      function validatePassword() {
+        const val = passwordInput.value;
+        if (val.length < 8) { 
+            passwordError.textContent = 'Password minimal 8 karakter'; 
+            return false; 
+        }
+        passwordError.textContent = ''; 
+        return true;
+      }
+      
+      function validateConfirmPassword() {
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          confirmPasswordError.textContent = 'Konfirmasi password tidak cocok'; 
+          return false;
+        }
+        confirmPasswordError.textContent = ''; 
+        return true;
+      }
+      // --- AKHIR PERBAIKAN ---
 
-      function validateUsername() { /* ... (fungsi validasi tetap sama) ... */ }
-      function validateEmail() { /* ... (fungsi validasi tetap sama) ... */ }
-      function validatePassword() { /* ... (fungsi validasi tetap sama) ... */ }
-      function validateConfirmPassword() { /* ... (fungsi validasi tetap sama) ... */ }
       function safeBtoa(str) {
         try { return btoa(unescape(encodeURIComponent(str))); } 
         catch (e) { console.error(e); return str; }
@@ -177,16 +215,17 @@
 
         let users = JSON.parse(localStorage.getItem('users')) || [];
         const emailExists = users.some(u => u.email.toLowerCase() === emailInput.value.trim().toLowerCase());
-        if (emailExists) { emailError.textContent = 'Email sudah terdaftar'; return; }
+        if (emailExists) { 
+            emailError.textContent = 'Email sudah terdaftar'; 
+            return; 
+        }
         
-        // --- PERUBAHAN DI SINI ---
         const newUser = {
           username: usernameInput.value.trim(),
           email: emailInput.value.trim(),
           password: safeBtoa(passwordInput.value),
-          role: 'user' // <- Role di-set otomatis menjadi 'user'
+          role: 'user'
         };
-        // --- AKHIR PERUBAHAN ---
 
         users.push(newUser);
         try {

@@ -87,23 +87,16 @@
     });
 
     document.addEventListener('DOMContentLoaded', function() {
-      // --- PERUBAHAN DIMULAI DI SINI ---
       function initializeAdmin() {
-        // Data akun admin (bisa kamu ganti)
         const ADMIN_EMAIL = "admin.dani@dzikir.app";
-        const ADMIN_PASS = "muhamad.dani"; // Password sebelum di-encode
-        
+        const ADMIN_PASS = "muhamad.dani";
         let users = JSON.parse(localStorage.getItem('users')) || [];
-        
-        // Cek apakah admin sudah ada
         const adminExists = users.some(user => user.email === ADMIN_EMAIL);
-        
-        // Jika belum ada, tambahkan
         if (!adminExists) {
           const adminUser = {
             username: "Admin",
             email: ADMIN_EMAIL,
-            password: btoa(ADMIN_PASS), // Password di-encode
+            password: btoa(ADMIN_PASS),
             role: "admin"
           };
           users.push(adminUser);
@@ -111,27 +104,45 @@
           console.log("Akun admin berhasil dibuat.");
         }
       }
-      
-      initializeAdmin(); // Jalankan fungsi untuk memastikan admin ada
-      // --- AKHIR PERUBAHAN ---
+      initializeAdmin();
 
       const loginForm = document.getElementById('loginForm');
-      // ... (sisa kode validasi dan submit form tetap sama)
       const email = document.getElementById('email');
       const password = document.getElementById('password');
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
       const loadingOverlay = document.getElementById('loadingOverlay');
-
       const togglePassword = document.getElementById('togglePassword');
+
       togglePassword.addEventListener('click', function() {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
         togglePassword.src = type === 'password' ? "show.png" : "hide.png";
       });
 
-      function validateEmail() { /* ... */ }
-      function validatePassword() { /* ... */ }
+      // --- PERBAIKAN DI DUA FUNGSI INI ---
+      function validateEmail() {
+        const emailValue = email.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailValue)) {
+          emailError.textContent = 'Format email tidak valid';
+          return false;
+        }
+        emailError.textContent = '';
+        return true;
+      }
+      
+      function validatePassword() {
+        const passwordValue = password.value;
+        if (passwordValue.length < 1) { // Bisa diubah jika perlu minimal karakter
+          passwordError.textContent = 'Password tidak boleh kosong';
+          return false;
+        }
+        passwordError.textContent = '';
+        return true;
+      }
+      // --- AKHIR PERBAIKAN ---
+
       email.addEventListener('input', validateEmail);
       password.addEventListener('input', validatePassword);
       
