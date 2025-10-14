@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Aplikasi Penghitung Dzikir</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Library untuk export PDF (jsPDF dan AutoTable) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
   <style>
-    /* Navbar layout: logo di atas, menu di bawah */
+    /* Styling navbar dkk (nggak diubah) */
     nav {
       background-color: var(--nav-bg);
       width: 100%;
@@ -111,22 +110,27 @@
     .dropdown-menu a:hover {
       background: var(--btn-hover);
     }
-    /* Sisanya seperti style konten, tombol, dsb. di file style.css */
+
+    /* Tambahan: tombol admin */
+    #btnLihatStorage {
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 15px;
+      margin-top: 15px;
+      cursor: pointer;
+      display: none; /* disembunyiin default */
+    }
   </style>
 </head>
 <body>
   <!-- Overlay Loading -->
-<div id="loading" class="loading-overlay">
-  <div class="spinner"></div>
-</div>
-  <!-- Elemen Notifikasi dan Modal Utama -->
-  <div id="notification" class="notification"></div>
-  <div id="modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-body"></div>
-      <div class="modal-footer"></div>
-    </div>
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div>
   </div>
+
   <!-- Navbar -->
   <nav>
     <div class="nav-logo">
@@ -145,7 +149,7 @@
         <button class="menu-toggle" id="menuToggle">&#8942;</button>
         <div class="dropdown-menu" id="dropdownMenu">
           <a href="riwayat.html">Riwayat Dzikir</a>
-<a href="logout.html" onclick="openLogoutModal(event)">Logout</a>
+          <a href="logout.html" onclick="openLogoutModal(event)">Logout</a>
         </div>
       </div>
     </div>
@@ -155,9 +159,9 @@
   <div class="content">
     <h1>Selamat Datang di DzikirApp</h1>
     <div class="container">
-      <!-- Elemen partikel -->
       <div class="floating-particles" id="particles-container"></div>
       <h2>Aplikasi Penghitung Dzikir</h2>
+
       <div class="dzikir-selector">
         <select id="dzikir-type">
           <option value="ListDzikir" hidden>List Dzikir:</option>
@@ -165,15 +169,8 @@
           <option value="alhamdulillah">Alhamdulillah</option>
           <option value="allahuakbar">Allahu Akbar</option>
           <option value="astagfirullah">Astagfirullah</option>
-          <option value="lailahaillallah">Laa ilaha illallah</option>
-          <option value="hasbunallah waniikmalwakil">Hasbunallah wa niikmal wakil - 450x</option>
-          <option value="lailaha ila anta">lailaha ila anta - 100x</option>
-          <option value="subhanallah wabihamdih">subhanallah wabihamdih - 100x</option>
-          <option value="la haula wala quwwata illa bilah">la haula wala quwwata illa bilah - 100x</option>
-          <option value="sholawatnabimuhammad">Allahumma shalli 'ala Muhammad - 100x</option>
-          <option value="sholawatnabimuhammad2">Allahumma shalli 'ala Muhammad wa 'ala ali Sayidina Muhammad</option>
-          <option value="Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni">Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni</option>
         </select>
+
         <div id="dzikir-display"></div>
         <div class="dzikir-actions">
           <button id="add-dzikir-btn">Tambah Dzikir</button>
@@ -182,32 +179,37 @@
           <button id="clear-history-btn">Hapus Riwayat Dzikir</button>
         </div>
       </div>
-      
+
       <div class="custom-target">
         <input type="number" id="target-count" placeholder="Target jumlah (misal: 33, 99, 100)">
       </div>
-      
+
       <div class="counter-display" id="counter">0</div>
-      
+
       <div class="progress-container">
         <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
       </div>
-      
+
       <div class="target-display">
         <span id="current-count">0</span>/<span id="target-display">0</span>
       </div>
-      
+
       <div class="buttons">
         <button class="count-btn btn-disabled" id="count-btn">Hitung (+1)</button>
         <button class="reset-btn btn-disabled" id="reset-btn">Reset</button>
-        <button href="#successModal" class="save-btn btn-disabled" id="save-btn">Simpan Sesi</button>
+        <button class="save-btn btn-disabled" id="save-btn">Simpan Sesi</button>
       </div>
+
       <h3>Untuk yang mau liat riwayatnya, klik titik 3 / dropdownMenu</h3>
       <div class="export-buttons">
         <button id="export-pdf-btn">Export ke PDF</button>
       </div>
+
+      <!-- Tombol khusus admin -->
+      <button id="btnLihatStorage" onclick="lihatStorage()">Lihat LocalStorage</button>
     </div>
   </div>
+
   <!-- Modal Logout -->
   <div class="modal1" id="logoutModal">
     <div class="modal-content">
@@ -219,14 +221,21 @@
       </div>
     </div>
   </div>
-  <script>
-    const role = localStorage.getItem("role");
 
-if (role === "admin") {
-  document.getElementById("btnLihatStorage").style.display = "block";
-} else {
-  document.getElementById("btnLihatStorage").style.display = "none";
-}
+  <script>
+    // tampilkan tombol admin kalau role = admin
+    const role = localStorage.getItem("role");
+    const btnLihatStorage = document.getElementById("btnLihatStorage");
+
+    if (role === "admin") {
+      btnLihatStorage.style.display = "block";
+    }
+
+    function lihatStorage() {
+      let allData = { ...localStorage };
+      alert("Isi LocalStorage:\n" + JSON.stringify(allData, null, 2));
+      console.log(allData);
+    }
   </script>
   <script src="script.js"></script>
 </body>
