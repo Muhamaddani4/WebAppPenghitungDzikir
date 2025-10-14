@@ -2,78 +2,91 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DzikirApp - Login</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Aplikasi Penghitung Dzikir</title>
   <style>
-    :root {
-      --font-family: 'Poppins', sans-serif;
-      --text-color: #e6edf3;
-      --text-secondary: #8b949e;
-      --card-bg: rgba(22, 27, 34, 0.7);
-      --border-color: rgba(255, 255, 255, 0.1);
-      --accent-color: #58a6ff;
-      --danger-color: #f85149;
-      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      --transition-speed: 0.3s;
+    /* CSS Banner Login */
+    .login-banner {
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 20px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--font-family);
-      color: var(--text-color);
-      min-height: 100vh;
+    .login-banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Animasi & styling lain seperti sebelumnya */
+    @keyframes gradientAnimation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spinner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes refreshAnimation {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(0.8); }
+    }
+    .refreshing {
+      animation: refreshAnimation 0.5s forwards;
+    }
+    /* Background menggunakan gradien */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: url('https://images.unsplash.com/photo-1536782376847-5c9d14d97cc0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
-      background-size: cover;
-      overflow: hidden;
-      -webkit-user-select: none; -ms-user-select: none; user-select: none;
+      min-height: 100vh;
+      position: relative;
     }
-    input, textarea { -webkit-user-select: auto; -ms-user-select: auto; user-select: auto; }
-    .auth-container { width: 100%; max-width: 420px; padding: 20px; }
-    .auth-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      animation: fadeIn 1s ease-in-out;
+    .container {
+      background-color: rgba(255, 255, 255, 0.97);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+      position: relative;
+      z-index: 1;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-    .auth-card h1 { text-align: center; font-size: 2rem; font-weight: 600; margin-bottom: 30px; }
-    .input-group { position: relative; margin-bottom: 25px; }
+    h1 {
+      color: #4A90E2;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .input-group {
+      position: relative;
+      margin: 15px 0;
+      text-align: left;
+    }
     .input-group input {
-      width: 100%; background: transparent;
-      border: 1px solid var(--border-color);
-      border-radius: 10px; padding: 14px 45px 14px 20px;
-      font-family: var(--font-family); color: var(--text-color);
-      font-size: 1rem; transition: border-color var(--transition-speed);
+      width: 300px;
+      padding: 12px 40px 12px 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    .input-group input:focus { outline: none; border-color: var(--accent-color); }
-    .btn {
-      width: 100%; border-radius: 10px;
-      padding: 14px 20px; font-family: var(--font-family);
-      font-weight: 600; cursor: pointer;
-      transition: all var(--transition-speed) ease;
+    .input-group input:focus {
+      outline: none;
+      border-color: #4A90E2;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
     }
-    .btn-primary { background-color: var(--accent-color); border: 1px solid var(--accent-color); color: white; }
-    .btn-primary:hover { background-color: transparent; color: var(--accent-color); }
-    .btn-secondary {
-        background-color: transparent;
-        color: var(--text-secondary);
-        border: 1px solid var(--border-color);
-        margin-top: 15px;
-    }
-    .btn-secondary:hover { background-color: rgba(255, 255, 255, 0.1); color: var(--text-color); }
-    .auth-switch { text-align: center; margin-top: 20px; color: var(--text-secondary); }
-    .auth-switch a { color: var(--accent-color); text-decoration: none; font-weight: 600; }
-    .error { color: var(--danger-color); font-size: 0.8rem; margin-top: 5px; min-height: 1.2em; }
     .toggle-icon {
       position: absolute;
       right: 10px;
@@ -90,103 +103,160 @@
     .toggle-icon:hover {
       opacity: 1;
     }
-    
+    .error {
+      color: #e74c3c;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #ff7e5f, #feb47b);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      margin-top: 10px;
+    }
+    button:hover {
+      transform: scale(1.02);
+    }
+    /* Tombol refresh */
+    #refreshButton {
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      margin-top: 15px;
+    }
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    p a {
+      color: #4A90E2;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    /* Style untuk loading overlay (jika diperlukan) */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+    }
   </style>
 </head>
 <body>
   
-  <main class="auth-container">
-    <section class="auth-card">
-        <h1>Login Akun</h1>
-        <form id="loginForm" novalidate>
-            <div class="input-group">
-                <input type="email" id="email" placeholder="Email" required>
-                <div id="emailError" class="error"></div>
-            </div>
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Password" required>
-                <span id="togglePassword" class="toggle-icon">
-                    <img src="hide.png" alt="Toggle Password">
-                </span>
-                <div id="passwordError" class="error"></div>
-            </div>
-            <button type="submit" class="btn btn-primary">Masuk</button>
-        </form>
-        <button type="button" id="refresh-btn" class="btn btn-secondary">Refresh</button>
-        <p class="auth-switch">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
-    </section>
-  </main>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Tombol Refresh Manual
-      const refreshBtn = document.getElementById('refresh-btn');
-      if(refreshBtn) {
-        refreshBtn.addEventListener('click', () => window.location.reload());
-      }
-      
-      // Initialize Admin
-      function initializeAdmin() {
-        const ADMIN_EMAIL = "admin.dani@dzikir.app";
-        const ADMIN_PASS = "muhamad.dani";
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        if (!users.some(u => u.email === ADMIN_EMAIL)) {
-          users.push({ username: "Admin", email: ADMIN_EMAIL, password: btoa(ADMIN_PASS), role: "admin" });
-          localStorage.setItem('users', JSON.stringify(users));
-        }
-      }
-      initializeAdmin();
+  <div class="container" id="container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="email" id="email" placeholder="Email" required>
+        <div id="emailError" class="error"></div>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required>
+        <img src="show.png" alt="Toggle" class="toggle-icon" id="togglePassword" oncontextmenu="return false;">
+        <div id="passwordError" class="error"></div>
+      </div>
+      <button type="submit">Masuk</button>
+    </form>
+    <button id="refreshButton">Refresh</button>
+    <p>Belum punya akun? <a href="register.html" oncontextmenu="return false;" style="user-select: none;">Daftar disini</a></p>
+  </div>
 
+  <!-- Loading overlay (opsional) -->
+  <div class="loading-overlay" id="loadingOverlay"></div>
+
+  <script>
+    // Refresh halaman saat event scroll (wheel) terjadi
+    window.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      location.reload();
+    }, { passive: false });
+
+    // Tombol refresh: animasi refresh sebelum reload
+    const refreshButton = document.getElementById('refreshButton');
+    const container = document.getElementById('container');
+    refreshButton.addEventListener('click', function() {
+      container.classList.add('refreshing');
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
       const loginForm = document.getElementById('loginForm');
       const email = document.getElementById('email');
       const password = document.getElementById('password');
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
-      const togglePassword = document.getElementById('togglePassword');
-      const togglePasswordIcon = togglePassword ? togglePassword.querySelector('img') : null;
+      const loadingOverlay = document.getElementById('loadingOverlay');
 
-      if (togglePassword && togglePasswordIcon) {
-          togglePassword.addEventListener('click', function() {
-              const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-              password.setAttribute('type', type);
-              togglePasswordIcon.src = type === 'password' ? 'hide.png' : 'show.png';
-          });
-      }
+      // Toggle password
+      const togglePassword = document.getElementById('togglePassword');
+      togglePassword.addEventListener('click', function() {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        togglePassword.src = type === 'password' 
+          ? "show.png" 
+          : "hide.png";
+      });
 
       function validateEmail() {
         const emailValue = email.value.trim();
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
-          emailError.textContent = 'Format email tidak valid.'; return false;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailValue)) {
+          emailError.textContent = 'Format email tidak valid';
+          return false;
         }
-        emailError.textContent = ''; return true;
+        emailError.textContent = '';
+        return true;
       }
-      
       function validatePassword() {
-        if (password.value.length < 1) {
-          passwordError.textContent = 'Password tidak boleh kosong.'; return false;
+        const passwordValue = password.value;
+        if (passwordValue.length < 8) {
+          passwordError.textContent = 'Password minimal 8 karakter';
+          return false;
         }
-        passwordError.textContent = ''; return true;
+        passwordError.textContent = '';
+        return true;
       }
+      email.addEventListener('input', validateEmail);
+      password.addEventListener('input', validatePassword);
 
-      if (loginForm) {
-          loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (validateEmail() && validatePassword()) {
-              let users = JSON.parse(localStorage.getItem('users')) || [];
-              const user = users.find(u => 
-                u.email.toLowerCase() === email.value.trim().toLowerCase() && u.password === btoa(password.value)
-              );
-              if (user) {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                window.location.href = 'loginRedirect.html';
-              } else {
-                alert('Email atau password salah!');
-              }
-            }
-          });
-      }
+      loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+        if (isEmailValid && isPasswordValid) {
+          let users = JSON.parse(localStorage.getItem('users')) || [];
+          const user = users.find(u => 
+            u.email.toLowerCase() === email.value.trim().toLowerCase() &&
+            u.password === btoa(password.value)
+          );
+          if (user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            // Tampilkan overlay loading
+            loadingOverlay.classList.add('active');
+            // Redirect ke halaman login redirect
+            setTimeout(() => {
+              window.location.href = 'loginRedirect.html';
+            }, 2000);
+          } else {
+            alert('Email atau password salah!');
+          }
+        }
+      });
     });
   </script>
-
 </body>
 </html>
