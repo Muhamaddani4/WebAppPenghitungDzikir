@@ -356,3 +356,24 @@ textarea {
   font-family: var(--font-family); color: var(--text-color); font-size: 1rem;
   resize: vertical;
 }
+
+/* --- UPDATE: Anti Salin Teks & Perbaikan Tampilan Input --- */
+
+/* Mematikan seleksi teks untuk seluruh halaman */
+body {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10+ and Edge */
+  user-select: none; /* Standar */
+}
+
+/* Mengizinkan kembali seleksi di dalam input dan textarea agar mudah diedit */
+input, textarea {
+  -webkit-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+
+/* Memperbesar ukuran default textarea di halaman bantuan */
+textarea#contact-message {
+    min-height: 150px; /* Atur tinggi minimal */
+}

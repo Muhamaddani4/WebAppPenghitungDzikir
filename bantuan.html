@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
 </head>
 <body>
 
@@ -56,7 +59,7 @@
             </details>
             <details>
                 <summary>Bagaimana cara kerja fitur "Kirim Pesan"?</summary>
-                <p>Fitur ini menggunakan tautan 'mailto:'. Saat Anda mengklik "Kirim Pesan", aplikasi akan membuka aplikasi email default di perangkat Anda (seperti Gmail, Outlook, dll.) dengan alamat tujuan dan isi pesan yang sudah terisi. Anda hanya perlu menekan tombol kirim dari aplikasi email tersebut.</p>
+                <p>Fitur ini akan mengirimkan pesan Anda langsung ke email kami melalui formulir di bawah. Cukup isi semua kolom dan klik "Kirim Pesan". Anda akan mendapatkan notifikasi langsung di halaman ini jika pesan berhasil terkirim.</p>
             </details>
         </div>
 
@@ -64,18 +67,18 @@
             <h3 class="contact-title">Masih butuh bantuan? Hubungi kami</h3>
             <form id="contact-form">
                 <div class="input-group">
-                    <label for="contact-name">Nama Anda</label>
+                    <label for="contact-name">Nama Anda: </label>
                     <input type="text" id="contact-name" placeholder="Masukkan nama Anda" required>
                 </div>
                 <div class="input-group">
-                    <label for="contact-subject">Subjek Pesan</label>
+                    <label for="contact-subject">Subjek Pesan: </label>
                     <input type="text" id="contact-subject" placeholder="Contoh: Laporan Bug" required>
                 </div>
                 <div class="input-group">
-                    <label for="contact-message">Isi Pesan</label>
-                    <textarea id="contact-message" rows="5" placeholder="Jelaskan pertanyaan atau masalah Anda di sini..." required></textarea>
+                    <label for="contact-message">Isi Pesan: </label>
+                    <textarea id="contact-message" rows="6" placeholder="Jelaskan pertanyaan atau masalah Anda di sini..." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Kirim Pesan via Email</button>
+                <button type="submit" id="submit-button" class="btn btn-primary">Kirim Pesan: </button>
             </form>
         </div>
     </section>
