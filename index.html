@@ -20,15 +20,12 @@
   <div id="notification" class="notification"></div>
   <div id="modal" class="modal">
     <div class="modal-content">
-      <div class="modal-title"></div>
-      <div class="modal-body"></div>
-      <div class="modal-footer"></div>
+      <div class="modal-title"></div><div class="modal-body"></div><div class="modal-footer"></div>
     </div>
   </div>
   <div class="modal1" id="logoutModal">
     <div class="modal-content">
-      <h2>Konfirmasi Logout</h2>
-      <p>Apakah Anda yakin ingin keluar?</p>
+      <h2>Konfirmasi Logout</h2><p>Apakah Anda yakin ingin keluar?</p>
       <div class="modal-buttons">
         <button class="btn-confirm" onclick="logout()">Ya</button>
         <button class="btn-cancel1" onclick="closeLogoutModal()">Batal</button>
@@ -36,87 +33,86 @@
     </div>
   </div>
 
-  <nav>
-    <div class="nav-logo">DzikirApp</div>
-    <div class="nav-links">
-      <a href="#">Home</a>
-      <a href="#">Tentang</a>
-      <a href="#">Kontak</a>
-    </div>
-    <div class="nav-controls">
-      <button class="mode-toggle" id="modeToggle">
-        <img src="moon.png" alt="Mode Icon" id="modeIcon">
-      </button>
-      <div class="dropdown">
-        <button class="menu-toggle" id="menuToggle">&#8942;</button>
-        <div class="dropdown-menu" id="dropdownMenu">
-          <a href="riwayat.html">Riwayat Dzikir</a>
-          <a href="#" onclick="openLogoutModal(event)">Logout</a>
-        </div>
+  <header class="app-header">
+      <h1 class="app-title">DzikirApp</h1>
+      <div class="header-controls">
+          <button class="mode-toggle" id="modeToggle">
+              <img src="moon.png" alt="Mode Icon" id="modeIcon">
+          </button>
+          <div class="dropdown">
+              <button class="menu-toggle" id="menuToggle">&#9776;</button>
+              <div class="dropdown-menu" id="dropdownMenu">
+                  <a href="riwayat.html">Riwayat Dzikir</a>
+                  <a href="#" onclick="openLogoutModal(event)">Logout</a>
+              </div>
+          </div>
       </div>
-    </div>
-  </nav>
+  </header>
 
   <main class="container">
     
-    <div class="card settings-card">
-      <h2 class="card-title">Pilih Dzikir</h2>
-      <div class="dzikir-selector">
-        <select id="dzikir-type">
-          <option value="ListDzikir" hidden>Pilih dari daftar...</option>
-          <option value="subhanallah">Subhanallah</option>
-          <option value="alhamdulillah">Alhamdulillah</option>
-          <option value="allahuakbar">Allahu Akbar</option>
-          <option value="astagfirullah">Astagfirullah</option>
-          <option value="lailahaillallah">Laa ilaha illallah</option>
-          <option value="hasbunallah waniikmalwakil">Hasbunallah wa niikmal wakil - 450x</option>
-          <option value="lailaha ila anta">lailaha ila anta - 100x</option>
-          <option value="subhanallah wabihamdih">subhanallah wabihamdih - 100x</option>
-          <option value="la haula wala quwwata illa bilah">la haula wala quwwata illa bilah - 100x</option>
-          <option value="sholawatnabimuhammad">Allahumma shalli 'ala Muhammad - 100x</option>
-          <option value="sholawatnabimuhammad2">Allahumma shalli 'ala Muhammad wa 'ala ali Sayidina Muhammad</option>
-          <option value="Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni">Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni</option>
-        </select>
+    <section class="card settings-card">
+      <h2 class="card-title">Pengaturan</h2>
+      <div class="input-group">
+          <label for="dzikir-type">Pilih Jenis Dzikir</label>
+          <select id="dzikir-type">
+              <option value="ListDzikir" hidden>Pilih dari daftar...</option>
+              <option value="subhanallah">Subhanallah</option>
+              <option value="alhamdulillah">Alhamdulillah</option>
+              <option value="allahuakbar">Allahu Akbar</option>
+              <option value="astagfirullah">Astagfirullah</option>
+              <option value="lailahaillallah">Laa ilaha illallah</option>
+              <option value="hasbunallah waniikmalwakil">Hasbunallah wa niikmal wakil - 450x</option>
+              <option value="lailaha ila anta">lailaha ila anta - 100x</option>
+              <option value="subhanallah wabihamdih">subhanallah wabihamdih - 100x</option>
+              <option value="la haula wala quwwata illa bilah">la haula wala quwwata illa bilah - 100x</option>
+              <option value="sholawatnabimuhammad">Allahumma shalli 'ala Muhammad - 100x</option>
+              <option value="sholawatnabimuhammad2">Allahumma shalli 'ala Muhammad wa 'ala ali Sayidina Muhammad</option>
+              <option value="Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni">Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni</option>
+          </select>
       </div>
-      <div class="target-setter">
-        <input type="number" id="target-count" placeholder="Tentukan Target">
+      <div class="input-group">
+          <label for="target-count">Tentukan Target Hitungan</label>
+          <input type="number" id="target-count" placeholder="Contoh: 33">
       </div>
-       <div class="dzikir-actions">
-          <button id="add-dzikir-btn" class="btn-secondary">Tambah</button>
-          <button id="edit-dzikir-btn" class="btn-secondary">Edit</button>
-          <button id="delete-dzikir-btn" class="btn-secondary btn-danger">Hapus</button>
-        </div>
-    </div>
+      <div class="dzikir-actions">
+          <button id="add-dzikir-btn" class="btn">Tambah</button>
+          <button id="edit-dzikir-btn" class="btn">Edit</button>
+          <button id="delete-dzikir-btn" class="btn btn-danger">Hapus</button>
+      </div>
+    </section>
 
-    <div class="card counter-card">
-      <div id="dzikir-display" class="current-dzikir-text">...</div>
-      <div class="counter-dial">
-        <svg class="progress-ring" width="220" height="220">
-           <circle class="progress-ring-bg" cx="110" cy="110" r="100"/>
-           <circle id="progress-bar" class="progress-ring-circle" cx="110" cy="110" r="100"/>
-        </svg>
-        <div id="counter" class="counter-display">0</div>
-        <button id="count-btn" class="count-btn btn-disabled"></button>
-      </div>
-      <div id="target-display" class="target-info">Target: <span id="current-count">0</span> / <span id="target-display-value">0</span></div>
-       <div class="action-buttons">
-        <button id="reset-btn" class="btn-secondary btn-disabled">Reset</button>
-        <button id="save-btn" class="btn-primary btn-disabled">Simpan</button>
-      </div>
-    </div>
+    <section class="card counter-card">
+        <div id="dzikir-display" class="current-dzikir-text">Pilih Dzikir & Target</div>
+        <div class="counter-dial">
+            <svg class="progress-ring" width="200" height="200">
+                <circle class="progress-ring-bg" cx="100" cy="100" r="90"/>
+                <circle id="progress-bar" class="progress-ring-circle" cx="100" cy="100" r="90"/>
+            </svg>
+            <div id="counter" class="counter-display">0</div>
+            <button id="count-btn" class="count-btn btn-disabled"></button>
+        </div>
+        <div id="target-display" class="target-info">
+            <span id="current-count">0</span> / <span id="target-display-value">0</span>
+        </div>
+        <div class="action-buttons">
+            <button id="reset-btn" class="btn btn-disabled">Reset</button>
+            <button id="save-btn" class="btn btn-primary btn-disabled">Simpan</button>
+        </div>
+    </section>
     
-    <div class="card extra-card">
+    <section class="card extra-card">
        <h2 class="card-title">Opsi Lanjutan</h2>
         <div class="export-buttons">
-            <button id="clear-history-btn" class="btn-secondary btn-danger">Hapus Semua Riwayat</button>
-            <button id="export-pdf-btn" class="btn-secondary">Export PDF</button>
+            <button id="clear-history-btn" class="btn btn-danger">Hapus Riwayat</button>
+            <button id="export-pdf-btn" class="btn">Export PDF</button>
         </div>
         <div id="admin-panel" class="admin-panel" style="display: none;">
             <h3 class="admin-title">Panel Admin</h3>
-            <button id="view-storage-btn" class="btn-admin">Lihat LocalStorage</button>
-            <button id="manage-users-btn" class="btn-admin btn-danger">Kelola User</button>
+            <button id="view-storage-btn" class="btn btn-admin">Lihat Storage</button>
+            <button id="manage-users-btn" class="btn btn-admin btn-danger">Kelola User</button>
         </div>
-    </div>
+    </section>
 
   </main>
   
