@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* CSS Gabungan untuk Login & Register */
     :root {
       --font-family: 'Poppins', sans-serif;
       --text-color: #e6edf3;
@@ -32,17 +31,12 @@
       align-items: center;
       background: url('https://images.unsplash.com/photo-1536782376847-5c9d14d97cc0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
       background-size: cover;
-      overflow: hidden; /* Mencegah scrollbar muncul karena refresh */
-      /* Anti Salin Teks */
+      overflow: hidden;
       -webkit-user-select: none;
       -ms-user-select: none;
       user-select: none;
     }
-    input, textarea {
-      -webkit-user-select: auto;
-      -ms-user-select: auto;
-      user-select: auto;
-    }
+    input, textarea { -webkit-user-select: auto; -ms-user-select: auto; user-select: auto; }
     .auth-container { width: 100%; max-width: 420px; padding: 20px; }
     .auth-card {
       background: var(--card-bg);
@@ -57,24 +51,16 @@
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
-    .auth-card h1 {
-      text-align: center; font-size: 2rem;
-      font-weight: 600; margin-bottom: 30px;
-    }
+    .auth-card h1 { text-align: center; font-size: 2rem; font-weight: 600; margin-bottom: 30px; }
     .input-group { position: relative; margin-bottom: 25px; }
     .input-group input {
       width: 100%; background: transparent;
       border: 1px solid var(--border-color);
-      border-radius: 10px; padding: 14px 45px;
+      border-radius: 10px; padding: 14px 45px 14px 20px;
       font-family: var(--font-family); color: var(--text-color);
       font-size: 1rem; transition: border-color var(--transition-speed);
     }
     .input-group input:focus { outline: none; border-color: var(--accent-color); }
-    .input-group .icon {
-      position: absolute; left: 15px; top: 50%;
-      transform: translateY(-50%); color: var(--text-secondary);
-      font-size: 1.2rem; pointer-events: none;
-    }
     .btn {
       width: 100%; border: 1px solid var(--accent-color);
       border-radius: 10px; background-color: var(--accent-color);
@@ -83,14 +69,9 @@
       transition: all var(--transition-speed) ease;
     }
     .btn:hover { background-color: transparent; color: var(--accent-color); }
-    .auth-switch {
-      text-align: center; margin-top: 20px; color: var(--text-secondary);
-    }
+    .auth-switch { text-align: center; margin-top: 20px; color: var(--text-secondary); }
     .auth-switch a { color: var(--accent-color); text-decoration: none; font-weight: 600; }
-    .error {
-      color: var(--danger-color); font-size: 0.8rem;
-      margin-top: 5px; min-height: 1.2em;
-    }
+    .error { color: var(--danger-color); font-size: 0.8rem; margin-top: 5px; min-height: 1.2em; }
     .toggle-icon {
       position: absolute; right: 15px; top: 50%;
       transform: translateY(-50%); cursor: pointer;
@@ -106,12 +87,10 @@
         <h1>Login Akun</h1>
         <form id="loginForm" novalidate>
             <div class="input-group">
-                <span class="icon">&#9993;</span>
                 <input type="email" id="email" placeholder="Email" required>
                 <div id="emailError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#128274;</span>
                 <input type="password" id="password" placeholder="Password" required>
                 <span id="togglePassword" class="toggle-icon">
                     <img src="hide.png" alt="Toggle Password">
@@ -125,9 +104,6 @@
   </main>
   
   <script>
-    // Fitur Refresh On Scroll
-    window.addEventListener('wheel', (e) => { e.preventDefault(); window.location.reload(); }, { passive: false });
-
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize Admin
       function initializeAdmin() {
