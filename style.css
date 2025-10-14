@@ -219,3 +219,72 @@ select:focus, input:focus { outline: none; border-color: var(--accent-color); }
 @media (max-width: 768px) {
   .app-header { flex-direction: column; gap: 15px; }
 }
+
+/* --- STYLING TAMBAHAN UNTUK HALAMAN RIWAYAT --- */
+
+.history-card {
+  width: 100%;
+  max-width: 900px; /* Batasi lebar agar tidak terlalu besar di desktop */
+  margin: 0 auto; /* Posisikan di tengah */
+}
+
+.history-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.history-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all var(--transition-speed) ease;
+}
+
+.history-item:hover {
+  transform: scale(1.02);
+  border-color: var(--accent-color);
+}
+
+.history-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dzikir-type {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.dzikir-stats, .dzikir-date {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.btn-small {
+  padding: 8px 15px;
+  font-size: 0.9rem;
+}
+
+.empty-history {
+  padding: 50px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  border: 2px dashed var(--border-color);
+  border-radius: 15px;
+}
