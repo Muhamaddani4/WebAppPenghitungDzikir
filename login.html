@@ -76,14 +76,21 @@
     .error { color: var(--danger-color); font-size: 0.8rem; margin-top: 5px; min-height: 1.2em; }
     .toggle-icon {
       position: absolute;
-      right: 15px;
+      right: 10px;
       top: 50%;
-      transform: translateY(-50%); /* <-- INI KUNCI POSISI TENGAHNYA */
-      cursor: pointer;
+      transform: translateY(-50%);
       width: 24px;
       height: 24px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+      -webkit-user-drag: none;
+      user-select: none;
     }
-    .toggle-icon img { width: 100%; height: 100%; vertical-align: middle; }
+    .toggle-icon:hover {
+      opacity: 1;
+    }
+    
   </style>
 </head>
 <body>
