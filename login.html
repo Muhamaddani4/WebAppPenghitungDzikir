@@ -26,21 +26,13 @@
       font-family: var(--font-family);
       color: var(--text-color);
       min-height: 100vh;
-      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .video-background {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      filter: brightness(0.4);
+      /* --- BACKGROUND GAMBAR BARU --- */
+      background: url('https://images.unsplash.com/photo-1536782376847-5c9d14d97cc0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+      background-size: cover;
+      filter: brightness(0.9); /* Sedikit redupkan gambar */
     }
     .auth-container {
       width: 100%;
@@ -75,7 +67,7 @@
       background: transparent;
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 14px 14px 14px 45px; /* Tambah padding kiri untuk ikon */
+      padding: 14px 14px 14px 45px;
       font-family: var(--font-family);
       color: var(--text-color);
       font-size: 1rem;
@@ -91,6 +83,7 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-secondary);
+      font-size: 1.2rem; /* Ukuran ikon */
     }
     .btn {
       width: 100%;
@@ -124,33 +117,33 @@
       margin-top: 5px;
       min-height: 1.2em;
     }
+    /* --- STYLE ICON SHOW/HIDE PASSWORD BARU --- */
     .toggle-icon {
       position: absolute; right: 15px; top: 50%;
       transform: translateY(-50%); cursor: pointer;
-      color: var(--text-secondary);
+      width: 24px; height: 24px; /* Ukuran ikon */
+      color: var(--text-secondary); /* Warna default */
+    }
+    .toggle-icon img {
+      width: 100%; height: 100%;
+      vertical-align: middle;
     }
   </style>
 </head>
 <body>
   
-  <video autoplay muted loop class="video-background">
-    <source src="https://assets.mixkit.co/videos/preview/mixkit-red-gas-in-the-universe-14544-large.mp4" type="video/mp4">
-    Browser Anda tidak mendukung tag video.
-  </video>
-
   <main class="auth-container">
     <section class="auth-card">
         <h1>Login Akun</h1>
         <form id="loginForm" novalidate>
             <div class="input-group">
-                <span class="icon">&#9993;</span>
-                <input type="email" id="email" placeholder="Email" required>
+                <span class="icon">&#9993;</span> <input type="email" id="email" placeholder="Email" required>
                 <div id="emailError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#128274;</span>
-                <input type="password" id="password" placeholder="Password" required>
-                <span id="togglePassword" class="toggle-icon">&#128065;</span>
+                <span class="icon">&#128274;</span> <input type="password" id="password" placeholder="Password" required>
+                <span id="togglePassword" class="toggle-icon">
+                    <img src="hide.png" alt="Hide Password"> </span>
                 <div id="passwordError" class="error"></div>
             </div>
             <button type="submit" class="btn">Masuk</button>
@@ -160,8 +153,8 @@
   </main>
   
   <script>
-    // Fungsionalitas inti dari file login.html lama kamu tetap dipertahankan
     document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Admin (tetap sama)
       function initializeAdmin() {
         const ADMIN_EMAIL = "admin.dani@dzikir.app";
         const ADMIN_PASS = "muhamad.dani";
@@ -182,14 +175,18 @@
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
       const togglePassword = document.getElementById('togglePassword');
+      const togglePasswordIcon = togglePassword ? togglePassword.querySelector('img') : null;
 
-      togglePassword.addEventListener('click', function() {
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
-        this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
-      });
+      if (togglePassword && togglePasswordIcon) {
+          togglePassword.addEventListener('click', function() {
+              const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+              password.setAttribute('type', type);
+              togglePasswordIcon.src = type === 'password' ? 'hide.png' : 'show.png'; // Ganti ikon
+              togglePasswordIcon.alt = type === 'password' ? 'Hide Password' : 'Show Password';
+          });
+      }
 
-      function validateEmail() {
+      function validateEmail() { /* ... kode tetap sama ... */
         const emailValue = email.value.trim();
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
           emailError.textContent = 'Format email tidak valid.'; return false;
@@ -197,31 +194,33 @@
         emailError.textContent = ''; return true;
       }
       
-      function validatePassword() {
+      function validatePassword() { /* ... kode tetap sama ... */
         if (password.value.length < 1) {
           passwordError.textContent = 'Password tidak boleh kosong.'; return false;
         }
         passwordError.textContent = ''; return true;
       }
 
-      loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const isEmailValid = validateEmail();
-        const isPasswordValid = validatePassword();
-        if (isEmailValid && isPasswordValid) {
-          let users = JSON.parse(localStorage.getItem('users')) || [];
-          const user = users.find(u => 
-            u.email.toLowerCase() === email.value.trim().toLowerCase() &&
-            u.password === btoa(password.value)
-          );
-          if (user) {
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            window.location.href = 'loginRedirect.html';
-          } else {
-            alert('Email atau password salah!');
-          }
-        }
-      });
+      if (loginForm) {
+          loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            if (isEmailValid && isPasswordValid) {
+              let users = JSON.parse(localStorage.getItem('users')) || [];
+              const user = users.find(u => 
+                u.email.toLowerCase() === email.value.trim().toLowerCase() &&
+                u.password === btoa(password.value)
+              );
+              if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = 'loginRedirect.html';
+              } else {
+                alert('Email atau password salah!');
+              }
+            }
+          });
+      }
     });
   </script>
 

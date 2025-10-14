@@ -27,21 +27,13 @@
       font-family: var(--font-family);
       color: var(--text-color);
       min-height: 100vh;
-      overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .video-background {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      filter: brightness(0.4);
+      /* --- BACKGROUND GAMBAR BARU --- */
+      background: url('https://images.unsplash.com/photo-1536782376847-5c9d14d97cc0?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+      background-size: cover;
+      filter: brightness(0.9);
     }
     .auth-container {
       width: 100%;
@@ -92,6 +84,7 @@
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-secondary);
+      font-size: 1.2rem;
     }
     .btn {
       width: 100%;
@@ -125,44 +118,45 @@
       margin-top: 5px;
       min-height: 1.2em;
     }
+    /* --- STYLE ICON SHOW/HIDE PASSWORD BARU --- */
     .toggle-icon {
       position: absolute; right: 15px; top: 50%;
       transform: translateY(-50%); cursor: pointer;
+      width: 24px; height: 24px;
       color: var(--text-secondary);
+    }
+    .toggle-icon img {
+      width: 100%; height: 100%;
+      vertical-align: middle;
     }
   </style>
 </head>
 <body>
-
-  <video autoplay muted loop class="video-background">
-    <source src="https://assets.mixkit.co/videos/preview/mixkit-red-gas-in-the-universe-14544-large.mp4" type="video/mp4">
-    Browser Anda tidak mendukung tag video.
-  </video>
 
   <main class="auth-container">
     <section class="auth-card">
         <h1>Buat Akun Baru</h1>
         <form id="registerForm" novalidate>
             <div class="input-group">
-                <span class="icon">&#128100;</span>
-                <input type="text" id="username" placeholder="Username" required>
+                <span class="icon">&#128100;</span> <input type="text" id="username" placeholder="Username" required>
                 <div id="usernameError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#9993;</span>
-                <input type="email" id="email" placeholder="Email" required>
+                <span class="icon">&#9993;</span> <input type="email" id="email" placeholder="Email" required>
                 <div id="emailError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#128274;</span>
-                <input type="password" id="password" placeholder="Password" required>
-                <span id="togglePassword" class="toggle-icon">&#128065;</span>
+                <span class="icon">&#128274;</span> <input type="password" id="password" placeholder="Password" required>
+                <span id="togglePassword" class="toggle-icon">
+                    <img src="hide.png" alt="Hide Password">
+                </span>
                 <div id="passwordError" class="error"></div>
             </div>
             <div class="input-group">
-                <span class="icon">&#128274;</span>
-                <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" required>
-                <span id="toggleConfirmPassword" class="toggle-icon">&#128065;</span>
+                <span class="icon">&#128274;</span> <input type="password" id="confirmPassword" placeholder="Konfirmasi Password" required>
+                <span id="toggleConfirmPassword" class="toggle-icon">
+                    <img src="hide.png" alt="Hide Password">
+                </span>
                 <div id="confirmPasswordError" class="error"></div>
             </div>
             <button type="submit" class="btn">Daftar</button>
@@ -172,7 +166,6 @@
   </main>
   
   <script>
-    // Fungsionalitas inti dari file register.html lama kamu tetap dipertahankan
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('registerForm');
       const usernameInput = document.getElementById('username');
@@ -186,61 +179,68 @@
 
       function setupToggle(toggleElementId, inputElement) {
         const toggle = document.getElementById(toggleElementId);
-        toggle.addEventListener('click', function() {
-          const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
-          inputElement.setAttribute('type', type);
-          this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
-        });
+        const toggleIcon = toggle ? toggle.querySelector('img') : null;
+
+        if (toggle && toggleIcon) {
+            toggle.addEventListener('click', function() {
+                const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+                inputElement.setAttribute('type', type);
+                toggleIcon.src = type === 'password' ? 'hide.png' : 'show.png'; // Ganti ikon
+                toggleIcon.alt = type === 'password' ? 'Hide Password' : 'Show Password';
+            });
+        }
       }
       setupToggle('togglePassword', passwordInput);
       setupToggle('toggleConfirmPassword', confirmPasswordInput);
       
-      function validateUsername() {
+      function validateUsername() { /* ... kode tetap sama ... */
         if (usernameInput.value.trim().length < 3) { 
           usernameError.textContent = 'Username minimal 3 karakter.'; return false; 
         }
         usernameError.textContent = ''; return true;
       }
-      function validateEmail() {
+      function validateEmail() { /* ... kode tetap sama ... */
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) { 
           emailError.textContent = 'Format email tidak valid.'; return false; 
         }
         emailError.textContent = ''; return true;
       }
-      function validatePassword() {
+      function validatePassword() { /* ... kode tetap sama ... */
         if (passwordInput.value.length < 8) { 
           passwordError.textContent = 'Password minimal 8 karakter.'; return false; 
         }
         passwordError.textContent = ''; return true;
       }
-      function validateConfirmPassword() {
+      function validateConfirmPassword() { /* ... kode tetap sama ... */
         if (passwordInput.value !== confirmPasswordInput.value) {
           confirmPasswordError.textContent = 'Konfirmasi password tidak cocok.'; return false;
         }
         confirmPasswordError.textContent = ''; return true;
       }
 
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        const valid = validateUsername() && validateEmail() && validatePassword() && validateConfirmPassword();
-        if (!valid) return;
+      if (form) {
+          form.addEventListener('submit', e => {
+            e.preventDefault();
+            const valid = validateUsername() && validateEmail() && validatePassword() && validateConfirmPassword();
+            if (!valid) return;
 
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        if (users.some(u => u.email.toLowerCase() === emailInput.value.trim().toLowerCase())) { 
-          emailError.textContent = 'Email sudah terdaftar.'; return; 
-        }
-        
-        users.push({
-          username: usernameInput.value.trim(),
-          email: emailInput.value.trim(),
-          password: btoa(passwordInput.value),
-          role: 'user'
-        });
-        
-        localStorage.setItem('users', JSON.stringify(users));
-        alert('Registrasi berhasil! Silakan login.');
-        window.location.href = 'login.html';
-      });
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.some(u => u.email.toLowerCase() === emailInput.value.trim().toLowerCase())) { 
+              emailError.textContent = 'Email sudah terdaftar.'; return; 
+            }
+            
+            users.push({
+              username: usernameInput.value.trim(),
+              email: emailInput.value.trim(),
+              password: btoa(passwordInput.value),
+              role: 'user'
+            });
+            
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Registrasi berhasil! Silakan login.');
+            window.location.href = 'login.html';
+          });
+      }
     });
   </script>
 
