@@ -135,11 +135,13 @@ body {
   display: block; margin-bottom: 8px; font-size: 0.9rem;
   color: var(--text-secondary);
 }
-select, input[type="number"] {
+select, input[type="number"], input[type="text"], textarea {
   width: 100%; background: transparent;
   border: 1px solid var(--border-color);
-  border-radius: 10px; padding: 12px 15px;
+  border-radius: 10px; 
+  padding: 12px 15px;
   font-family: var(--font-family); color: var(--text-color); font-size: 1rem;
+  resize: vertical; /* Memungkinkan textarea diubah ukurannya secara vertikal */
 }
 select:focus, input:focus { outline: none; border-color: var(--accent-color); }
 
@@ -347,14 +349,6 @@ details p {
   margin-bottom: 20px;
   color: var(--text-secondary);
   font-weight: 600;
-}
-
-textarea {
-  width: 100%; background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 10px; padding: 12px 15px;
-  font-family: var(--font-family); color: var(--text-color); font-size: 1rem;
-  resize: vertical;
 }
 
 /* --- UPDATE: Anti Salin Teks & Perbaikan Tampilan Input --- */
