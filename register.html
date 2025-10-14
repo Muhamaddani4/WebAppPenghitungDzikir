@@ -76,9 +76,13 @@
     .auth-switch a { color: var(--accent-color); text-decoration: none; font-weight: 600; }
     .error { color: var(--danger-color); font-size: 0.8rem; margin-top: 5px; min-height: 1.2em; }
     .toggle-icon {
-      position: absolute; right: 15px; top: 50%;
-      transform: translateY(-50%); cursor: pointer;
-      width: 24px; height: 24px;
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
     }
     .toggle-icon img { width: 100%; height: 100%; vertical-align: middle; }
   </style>
@@ -150,10 +154,22 @@
       setupToggle('togglePassword', passwordInput);
       setupToggle('toggleConfirmPassword', confirmPasswordInput);
       
-      function validateUsername() { /* ... */ }
-      function validateEmail() { /* ... */ }
-      function validatePassword() { /* ... */ }
-      function validateConfirmPassword() { /* ... */ }
+      function validateUsername() {
+        if (usernameInput.value.trim().length < 3) { usernameError.textContent = 'Username min. 3 karakter.'; return false; }
+        usernameError.textContent = ''; return true;
+      }
+      function validateEmail() {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim())) { emailError.textContent = 'Format email tidak valid.'; return false; }
+        emailError.textContent = ''; return true;
+      }
+      function validatePassword() {
+        if (passwordInput.value.length < 8) { passwordError.textContent = 'Password min. 8 karakter.'; return false; }
+        passwordError.textContent = ''; return true;
+      }
+      function validateConfirmPassword() {
+        if (passwordInput.value !== confirmPasswordInput.value) { confirmPasswordError.textContent = 'Password tidak cocok.'; return false; }
+        confirmPasswordError.textContent = ''; return true;
+      }
 
       if (form) {
           form.addEventListener('submit', e => {
