@@ -2,165 +2,68 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aplikasi Penghitung Dzikir</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DzikirApp - Dashboard</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="style.css">
-  <!-- Library untuk export PDF (jsPDF dan AutoTable) -->
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-  <style>
-    /* Navbar layout: logo di atas, menu di bawah */
-    nav {
-      background-color: var(--nav-bg);
-      width: 100%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 5px 20px;
-      transition: background-color 0.5s ease;
-    }
-    .nav-logo {
-      width: 100%;
-      text-align: center;
-      padding: 5px 0;
-    }
-    .nav-logo .logo {
-      font-size: 24px;
-      font-weight: bold;
-      color: var(--nav-text);
-    }
-    .nav-menu {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      padding-bottom: 5px;
-    }
-    .nav-menu ul {
-      list-style: none;
-      display: flex;
-      gap: 15px;
-      margin: 0;
-      padding: 0;
-      align-items: center;
-    }
-    .nav-menu ul li a {
-      text-decoration: none;
-      color: var(--nav-text);
-      font-size: 16px;
-      transition: color 0.3s ease;
-      user-select: none;
-    }
-    .nav-menu ul li a:hover {
-      color: var(--accent-color);
-    }
-    .nav-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      position: relative;
-    }
-    .mode-toggle {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 0;
-    }
-    .mode-toggle img {
-      width: 35px;
-      height: 35px;
-      transition: transform 0.5s ease, opacity 0.5s ease;
-    }
-    .mode-toggle:hover img {
-      transform: scale(1.2);
-    }
-    .menu-toggle {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--nav-text);
-    }
-    .dropdown-menu {
-      position: absolute;
-      top: 45px;
-      right: 0;
-      background-color: var(--nav-bg);
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      display: none;
-      flex-direction: column;
-      min-width: 150px;
-      z-index: 1100;
-    }
-    .dropdown-menu a {
-      padding: 10px 15px;
-      text-decoration: none;
-      color: var(--nav-text);
-      display: block;
-      transition: background 0.3s;
-    }
-    .dropdown-menu a:hover {
-      background: var(--btn-hover);
-    }
-    /* Sisanya seperti style konten, tombol, dsb. di file style.css */
-  </style>
 </head>
 <body>
-  <!-- Overlay Loading -->
-<div id="loading" class="loading-overlay">
-  <div class="spinner"></div>
-</div>
-  <!-- Elemen Notifikasi dan Modal Utama -->
+
+  <div id="loading" class="loading-overlay"><div class="spinner"></div></div>
   <div id="notification" class="notification"></div>
   <div id="modal" class="modal">
     <div class="modal-content">
+      <div class="modal-title"></div>
       <div class="modal-body"></div>
       <div class="modal-footer"></div>
     </div>
   </div>
-  <!-- Navbar -->
-  <nav>
-    <div class="nav-logo">
-      <div class="logo">DzikirApp</div>
+  <div class="modal1" id="logoutModal">
+    <div class="modal-content">
+      <h2>Konfirmasi Logout</h2>
+      <p>Apakah Anda yakin ingin keluar?</p>
+      <div class="modal-buttons">
+        <button class="btn-confirm" onclick="logout()">Ya</button>
+        <button class="btn-cancel1" onclick="closeLogoutModal()">Batal</button>
+      </div>
     </div>
-    <div class="nav-menu">
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="#">Tentang</a></li>
-        <li><a href="#">Kontak</a></li>
-      </ul>
-      <div class="nav-controls">
-        <button class="mode-toggle" id="modeToggle">
-          <img src="moon.png" alt="Mode Icon" id="modeIcon" oncontextmenu="return false;">
-        </button>
+  </div>
+
+  <nav>
+    <div class="nav-logo">DzikirApp</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Tentang</a>
+      <a href="#">Kontak</a>
+    </div>
+    <div class="nav-controls">
+      <button class="mode-toggle" id="modeToggle">
+        <img src="moon.png" alt="Mode Icon" id="modeIcon">
+      </button>
+      <div class="dropdown">
         <button class="menu-toggle" id="menuToggle">&#8942;</button>
         <div class="dropdown-menu" id="dropdownMenu">
           <a href="riwayat.html">Riwayat Dzikir</a>
-<a href="logout.html" onclick="openLogoutModal(event)">Logout</a>
+          <a href="#" onclick="openLogoutModal(event)">Logout</a>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- Konten Utama -->
-  <div class="content">
-    <h1>Selamat Datang di DzikirApp</h1>
-    <div class="container">
-      <!-- Elemen partikel -->
-      <div class="floating-particles" id="particles-container"></div>
-      <h2>Aplikasi Penghitung Dzikir</h2>
+  <main class="container">
+    
+    <div class="card settings-card">
+      <h2 class="card-title">Pilih Dzikir</h2>
       <div class="dzikir-selector">
         <select id="dzikir-type">
-          <option value="ListDzikir" hidden>List Dzikir:</option>
+          <option value="ListDzikir" hidden>Pilih dari daftar...</option>
           <option value="subhanallah">Subhanallah</option>
           <option value="alhamdulillah">Alhamdulillah</option>
           <option value="allahuakbar">Allahu Akbar</option>
@@ -174,62 +77,49 @@
           <option value="sholawatnabimuhammad2">Allahumma shalli 'ala Muhammad wa 'ala ali Sayidina Muhammad</option>
           <option value="Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni">Allahumma innaka 'afuwwun, tuhibbul 'afwa fa'fu 'anni</option>
         </select>
-        <div id="dzikir-display"></div>
-        <div class="dzikir-actions">
-          <button id="add-dzikir-btn">Tambah Dzikir</button>
-          <button id="edit-dzikir-btn">Edit Dzikir</button>
-          <button id="delete-dzikir-btn">Hapus Dzikir</button>
-          <button id="clear-history-btn">Hapus Riwayat Dzikir</button>
+      </div>
+      <div class="target-setter">
+        <input type="number" id="target-count" placeholder="Tentukan Target">
+      </div>
+       <div class="dzikir-actions">
+          <button id="add-dzikir-btn" class="btn-secondary">Tambah</button>
+          <button id="edit-dzikir-btn" class="btn-secondary">Edit</button>
+          <button id="delete-dzikir-btn" class="btn-secondary btn-danger">Hapus</button>
         </div>
-      </div>
-      
-      <div class="custom-target">
-        <input type="number" id="target-count" placeholder="Target jumlah (misal: 33, 99, 100)">
-      </div>
-      
-      <div class="counter-display" id="counter">0</div>
-      
-      <div class="progress-container">
-        <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
-      </div>
-      
-      <div class="target-display">
-        <span id="current-count">0</span>/<span id="target-display">0</span>
-      </div>
-      
-      <div class="buttons">
-        <button class="count-btn btn-disabled" id="count-btn">Hitung (+1)</button>
-        <button class="reset-btn btn-disabled" id="reset-btn">Reset</button>
-        <button href="#successModal" class="save-btn btn-disabled" id="save-btn">Simpan Sesi</button>
-      </div>
-     <h3>Untuk yang mau liat riwayatnya, klik titik 3 / dropdownMenu</h3>
-      <div class="export-buttons">
-        <button id="export-pdf-btn">Export ke PDF</button>
-        <button id="view-storage-btn" style="display: none; background-color: #e67e22;">Lihat LocalStorage</button>
-        <button id="manage-users-btn" style="display: none; background-color: #c0392b;">Kelola User</button>
-      </div>
     </div>
-  </div>
-  <!-- Modal Logout -->
-  <div class="modal1" id="logoutModal">
-    <div class="modal-content">
-      <h2>Konfirmasi Logout</h2>
-      <p>Apakah Anda yakin ingin keluar?</p>
-      <div class="modal-buttons">
-        <button class="btn-confirm" onclick="logout()">Ya</button>
-        <button class="btn-cancel1" onclick="closeLogoutModal()">Batal</button>
-      </div>
-    </div>
-  </div>
-  <script>
-    const role = localStorage.getItem("role");
 
-if (role === "admin") {
-  document.getElementById("btnLihatStorage").style.display = "block";
-} else {
-  document.getElementById("btnLihatStorage").style.display = "none";
-}
-  </script>
+    <div class="card counter-card">
+      <div id="dzikir-display" class="current-dzikir-text">...</div>
+      <div class="counter-dial">
+        <svg class="progress-ring" width="220" height="220">
+           <circle class="progress-ring-bg" cx="110" cy="110" r="100"/>
+           <circle id="progress-bar" class="progress-ring-circle" cx="110" cy="110" r="100"/>
+        </svg>
+        <div id="counter" class="counter-display">0</div>
+        <button id="count-btn" class="count-btn btn-disabled"></button>
+      </div>
+      <div id="target-display" class="target-info">Target: <span id="current-count">0</span> / <span id="target-display-value">0</span></div>
+       <div class="action-buttons">
+        <button id="reset-btn" class="btn-secondary btn-disabled">Reset</button>
+        <button id="save-btn" class="btn-primary btn-disabled">Simpan</button>
+      </div>
+    </div>
+    
+    <div class="card extra-card">
+       <h2 class="card-title">Opsi Lanjutan</h2>
+        <div class="export-buttons">
+            <button id="clear-history-btn" class="btn-secondary btn-danger">Hapus Semua Riwayat</button>
+            <button id="export-pdf-btn" class="btn-secondary">Export PDF</button>
+        </div>
+        <div id="admin-panel" class="admin-panel" style="display: none;">
+            <h3 class="admin-title">Panel Admin</h3>
+            <button id="view-storage-btn" class="btn-admin">Lihat LocalStorage</button>
+            <button id="manage-users-btn" class="btn-admin btn-danger">Kelola User</button>
+        </div>
+    </div>
+
+  </main>
+  
   <script src="script.js"></script>
 </body>
 </html>
