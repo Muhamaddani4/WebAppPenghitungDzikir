@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DzikirApp - Pusat Bantuan</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="background-aurora"></div>
+  <div class="modal1" id="logoutModal">
+    <div class="modal-content">
+      <h2>Konfirmasi Logout</h2><p>Apakah Anda yakin ingin keluar?</p>
+      <div class="modal-buttons">
+        <button class="btn btn-primary" onclick="logout()">Ya</button>
+        <button class="btn" onclick="closeLogoutModal()">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="app-header">
+      <div class="nav-logo">DzikirApp</div>
+      <div class="header-controls">
+          <button class="btn-icon mode-toggle" id="modeToggle">
+              <img src="moon.png" alt="Mode Icon" id="modeIcon">
+          </button>
+          <div class="dropdown">
+              <button class="btn-icon menu-toggle" id="menuToggle">&#9776;</button>
+              <div class="dropdown-menu" id="dropdownMenu">
+                  <a href="index.html">Kembali ke Home</a>
+                  <a href="riwayat.html">Buka Riwayat</a>
+                  <a href="#" onclick="openLogoutModal(event)">Logout</a>
+              </div>
+          </div>
+      </div>
+  </header>
+
+  <main class="container">
+    <section class="card help-card">
+        <h2 class="card-title">Pusat Bantuan</h2>
+        
+        <div class="faq-section">
+            <details>
+                <summary>Bagaimana cara menambahkan dzikir baru?</summary>
+                <p>Di halaman utama, pada kartu "Pengaturan Dzikir", klik tombol "Tambah". Masukkan teks dzikir yang Anda inginkan pada jendela yang muncul, lalu klik simpan.</p>
+            </details>
+            <details>
+                <summary>Apakah saya bisa mengubah atau menghapus dzikir bawaan?</summary>
+                <p>Tidak. Dzikir bawaan (seperti Subhanallah, Alhamdulillah, dll.) tidak dapat diubah atau dihapus untuk menjaga integritas data dasar. Anda hanya bisa mengubah atau menghapus dzikir yang Anda tambahkan sendiri.</p>
+            </details>
+            <details>
+                <summary>Bagaimana cara kerja fitur "Kirim Pesan"?</summary>
+                <p>Fitur ini menggunakan tautan 'mailto:'. Saat Anda mengklik "Kirim Pesan", aplikasi akan membuka aplikasi email default di perangkat Anda (seperti Gmail, Outlook, dll.) dengan alamat tujuan dan isi pesan yang sudah terisi. Anda hanya perlu menekan tombol kirim dari aplikasi email tersebut.</p>
+            </details>
+        </div>
+
+        <div class="contact-section">
+            <h3 class="contact-title">Masih butuh bantuan? Hubungi kami</h3>
+            <form id="contact-form">
+                <div class="input-group">
+                    <label for="contact-name">Nama Anda</label>
+                    <input type="text" id="contact-name" placeholder="Masukkan nama Anda" required>
+                </div>
+                <div class="input-group">
+                    <label for="contact-subject">Subjek Pesan</label>
+                    <input type="text" id="contact-subject" placeholder="Contoh: Laporan Bug" required>
+                </div>
+                <div class="input-group">
+                    <label for="contact-message">Isi Pesan</label>
+                    <textarea id="contact-message" rows="5" placeholder="Jelaskan pertanyaan atau masalah Anda di sini..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Kirim Pesan via Email</button>
+            </form>
+        </div>
+    </section>
+  </main>
+  
+  <script src="script.js"></script> 
+  <script src="bantuan.js"></script>
+</body>
+</html>

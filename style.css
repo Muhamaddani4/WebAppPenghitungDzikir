@@ -288,3 +288,71 @@ select:focus, input:focus { outline: none; border-color: var(--accent-color); }
   border: 2px dashed var(--border-color);
   border-radius: 15px;
 }
+
+/* --- STYLING TAMBAHAN UNTUK HALAMAN BANTUAN --- */
+.help-card {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+details {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  padding: 15px 20px;
+}
+
+summary {
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none; /* Hapus panah default */
+}
+
+summary::-webkit-details-marker {
+  display: none; /* Hapus panah di Chrome */
+}
+
+summary::after {
+  content: '+';
+  float: right;
+  font-size: 1.5rem;
+  transition: transform var(--transition-speed) ease;
+}
+
+details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+details p {
+  margin-top: 15px;
+  color: var(--text-secondary);
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color);
+}
+
+.contact-section {
+  border-top: 1px solid var(--border-color);
+  padding-top: 30px;
+}
+
+.contact-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+textarea {
+  width: 100%; background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 10px; padding: 12px 15px;
+  font-family: var(--font-family); color: var(--text-color); font-size: 1rem;
+  resize: vertical;
+}
