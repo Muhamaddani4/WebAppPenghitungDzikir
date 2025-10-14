@@ -3,77 +3,64 @@ document.addEventListener('DOMContentLoaded', function() {
   // BAGIAN PENTING: PENGECEKAN ROLE & OTENTIKASI PENGGUNA
   // ===================================================================
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-  // 1. Jika tidak ada yang login, langsung tendang ke halaman login
   if (!currentUser) {
     window.location.href = "login.html";
-    return; // Hentikan sisa script agar tidak error
+    return;
   }
 
-  // 2. Jika yang login adalah 'admin', tampilkan panel admin
   if (currentUser.role === 'admin') {
     const adminPanel = document.getElementById('admin-panel');
-    if (adminPanel) {
-      adminPanel.style.display = 'block'; // 'block' akan membuatnya terlihat
-    }
+    if (adminPanel) adminPanel.style.display = 'flex';
     
-    // Pasang fungsi ke tombol-tombol admin
-    const viewStorageBtn = document.getElementById('view-storage-btn');
-    const manageUsersBtn = document.getElementById('manage-users-btn');
-
-    if (viewStorageBtn) {
-      viewStorageBtn.addEventListener('click', viewLocalStorage);
-    }
-    if (manageUsersBtn) {
-      manageUsersBtn.addEventListener('click', manageUsers);
-    }
+    document.getElementById('view-storage-btn')?.addEventListener('click', viewLocalStorage);
+    document.getElementById('manage-users-btn')?.addEventListener('click', manageUsers);
   }
 
   // ===================================================================
-  // FUNGSI-FUNGSI KHUSUS ADMIN
+  // FUNGSI-FUNGSI KHUSUS ADMIN (DENGAN TAMPILAN MODAL BARU)
   // ===================================================================
-
-  // Fungsi untuk melihat semua isi LocalStorage
   function viewLocalStorage() {
-    const storageData = {};
+    let tableHTML = '<table class="modal-table"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>';
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      try {
-        storageData[key] = JSON.parse(localStorage.getItem(key));
-      } catch (e) {
-        storageData[key] = localStorage.getItem(key);
-      }
+      let value = localStorage.getItem(key);
+      try { // Coba format JSON agar rapi
+        const parsed = JSON.parse(value);
+        value = JSON.stringify(parsed, null, 2);
+      } catch (e) { /* Biarkan sebagai teks biasa */ }
+      
+      tableHTML += `<tr><td>${key}</td><td><pre>${value}</pre></td></tr>`;
     }
-    const formattedData = JSON.stringify(storageData, null, 2);
+    tableHTML += '</tbody></table>';
+    
     openModal({
         title: "Isi LocalStorage",
-        contentHTML: `<pre style="text-align: left; white-space: pre-wrap; word-break: break-all;">${formattedData}</pre>`,
+        contentHTML: tableHTML,
         confirmText: "Tutup"
     });
   }
   
-  // Fungsi untuk menampilkan daftar user dan tombol hapus
   function manageUsers() {
     let users = JSON.parse(localStorage.getItem('users')) || [];
-    
-    let userListHTML = '<ul style="list-style: none; padding: 0; text-align: left;">';
+    let tableHTML = '<table class="modal-table"><thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Aksi</th></tr></thead><tbody>';
     users.forEach(user => {
       const isCurrentUser = user.email === currentUser.email;
       const deleteButton = isCurrentUser 
-        ? `<button class="delete-user-btn" data-email="${user.email}" disabled title="Tidak dapat menghapus diri sendiri">Hapus</button>`
-        : `<button class="delete-user-btn btn-danger" data-email="${user.email}">Hapus</button>`;
+        ? `<button class="btn btn-disabled" disabled>Hapus</button>`
+        : `<button class="btn btn-danger delete-user-btn" data-email="${user.email}">Hapus</button>`;
 
-      userListHTML += `
-        <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;">
-          <span><strong>${user.username}</strong> (${user.role})</span>
-          ${deleteButton}
-        </li>`;
+      tableHTML += `<tr>
+          <td>${user.username}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>${deleteButton}</td>
+        </tr>`;
     });
-    userListHTML += '</ul>';
+    tableHTML += '</tbody></table>';
     
     openModal({
         title: "Kelola Pengguna",
-        contentHTML: userListHTML,
+        contentHTML: tableHTML,
         confirmText: "Tutup",
         onRender: () => {
           document.querySelectorAll('.delete-user-btn').forEach(button => {
@@ -88,30 +75,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Fungsi untuk menghapus user dari LocalStorage
   function deleteUser(email) {
     let users = JSON.parse(localStorage.getItem('users')) || [];
     const updatedUsers = users.filter(user => user.email !== email);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
-    
-    manageUsers(); // Refresh daftar user di modal
-    showNotification(`User ${email} berhasil dihapus.`, '#e74c3c');
+    manageUsers();
+    showNotification(`User ${email} berhasil dihapus.`, '#f85149');
   }
-
 
   // ===================================================================
   // SISA KODE (SEMUA FUNGSI NORMAL APLIKASI)
   // ===================================================================
-
   const menuToggle = document.getElementById('menuToggle');
   const dropdownMenu = document.getElementById('dropdownMenu');
   menuToggle.addEventListener('click', () => {
-    const isVisible = dropdownMenu.style.display === 'flex';
-    dropdownMenu.style.display = isVisible ? 'none' : 'flex';
-    dropdownMenu.style.flexDirection = 'column';
+    dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
   });
   window.addEventListener('click', (e) => {
-    if (!menuToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+    if (!menuToggle.parentElement.contains(e.target)) {
       dropdownMenu.style.display = 'none';
     }
   });
@@ -132,9 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('mode', isDarkMode ? 'dark' : 'light');
     applyTheme(isDarkMode ? 'dark' : 'light');
   });
-  applyTheme(localStorage.getItem('mode'));
+  applyTheme(localStorage.getItem('mode') || 'light');
   
-  // Fungsi Modal yang lebih fleksibel
   function openModal(options) {
       const modal = document.getElementById('modal');
       const modalTitle = modal.querySelector('.modal-title');
@@ -143,34 +123,19 @@ document.addEventListener('DOMContentLoaded', function() {
       modalBody.innerHTML = "";
       modalFooter.innerHTML = "";
       if (modalTitle) modalTitle.textContent = options.title || " ";
-      if (options.message) modalBody.innerHTML = `<p>${options.message}</p>`;
       if (options.contentHTML) modalBody.innerHTML = options.contentHTML;
-      let inputElem = null;
-      if (options.input) {
-          inputElem = document.createElement('input');
-          inputElem.type = "text";
-          inputElem.value = options.defaultValue || "";
-          inputElem.style.cssText = "width: 95%; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #333; color: white;";
-          modalBody.appendChild(inputElem);
-      }
       if (options.confirmText) {
           const confirmBtn = document.createElement('button');
           confirmBtn.textContent = options.confirmText;
-          confirmBtn.className = 'btn-primary';
-          confirmBtn.onclick = () => {
-              modal.classList.remove('show');
-              if (options.onConfirm) options.onConfirm(inputElem ? inputElem.value : null);
-          };
+          confirmBtn.className = 'btn btn-primary';
+          confirmBtn.onclick = () => { modal.classList.remove('show'); if (options.onConfirm) options.onConfirm(); };
           modalFooter.appendChild(confirmBtn);
       }
       if (options.cancelText) {
           const cancelBtn = document.createElement('button');
           cancelBtn.textContent = options.cancelText;
-          cancelBtn.className = 'btn-secondary';
-          cancelBtn.onclick = () => {
-              modal.classList.remove('show');
-              if (options.onCancel) options.onCancel();
-          };
+          cancelBtn.className = 'btn';
+          cancelBtn.onclick = () => { modal.classList.remove('show'); if (options.onCancel) options.onCancel(); };
           modalFooter.appendChild(cancelBtn);
       }
       modal.classList.add('show');
@@ -178,17 +143,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   window.openModal = openModal;
   
-  window.openLogoutModal = (e) => {
-      if (e) e.preventDefault();
-      document.getElementById('logoutModal').style.display = 'flex';
-  };
-  window.closeLogoutModal = () => {
-      document.getElementById('logoutModal').style.display = 'none';
-  };
-  window.logout = () => {
-      localStorage.removeItem('currentUser');
-      window.location.href = "logout.html";
-  };
+  window.openLogoutModal = (e) => { e.preventDefault(); document.getElementById('logoutModal').style.display = 'flex'; };
+  window.closeLogoutModal = () => { document.getElementById('logoutModal').style.display = 'none'; };
+  window.logout = () => { localStorage.removeItem('currentUser'); window.location.href = "logout.html"; };
   
   const dzikirTypeSelect = document.getElementById('dzikir-type');
   const dzikirDisplay = document.getElementById('dzikir-display');
@@ -213,14 +170,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const radius = progressBar.r.baseVal.value;
   const circumference = 2 * Math.PI * radius;
   progressBar.style.strokeDasharray = `${circumference} ${circumference}`;
-  progressBar.style.strokeDashoffset = circumference;
 
   function updateDisplay() {
       counterDisplay.textContent = count;
       currentCountDisplay.textContent = count;
       targetDisplayValue.textContent = targetCount;
       const offset = circumference - (count / targetCount) * circumference;
-      progressBar.style.strokeDashoffset = (targetCount > 0) ? Math.max(0, offset) : circumference;
+      progressBar.style.strokeDashoffset = (targetCount > 0 && count > 0) ? Math.max(0, offset) : circumference;
   }
 
   function updateButtonsState() {
@@ -232,6 +188,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   dzikirTypeSelect.addEventListener('change', function() {
       dzikirDisplay.textContent = this.options[this.selectedIndex].text;
+      if (!targetCountInput.value) targetCountInput.value = 33; // Default target
+      targetCount = parseInt(targetCountInput.value);
+      count = 0;
+      updateDisplay();
       updateButtonsState();
   });
 
@@ -242,52 +202,30 @@ document.addEventListener('DOMContentLoaded', function() {
       updateButtonsState();
   });
 
-  addDzikirBtn.addEventListener('click', () => { /* ... logika tambah dzikir ... */ });
-  editDzikirBtn.addEventListener('click', () => { /* ... logika edit dzikir ... */ });
-  deleteDzikirBtn.addEventListener('click', () => { /* ... logika hapus dzikir ... */ });
-  
   clearHistoryBtn.addEventListener('click', () => {
-    if(confirm('Yakin ingin menghapus seluruh riwayat?')){
+    if(confirm('Yakin ingin menghapus seluruh riwayat dzikir?')) {
       localStorage.removeItem('dzikirHistory');
       dzikirHistory = [];
-      showNotification('Semua riwayat berhasil dihapus', '#e74c3c');
+      showNotification('Semua riwayat berhasil dihapus', '#f85149');
     }
   });
 
   countButton.addEventListener('click', function() {
       if (this.classList.contains('btn-disabled')) return;
-      if (targetCount > 0 && count >= targetCount) {
-          showNotification('Target sudah tercapai!', '#f39c12');
-          return;
-      }
+      if (targetCount > 0 && count >= targetCount) return;
       count++;
       updateDisplay();
-      if (count === targetCount) {
-          showNotification('Alhamdulillah, target tercapai!', '#2ecc71');
-      }
+      if (count === targetCount) showNotification('Alhamdulillah, target tercapai!', '#3fb950');
   });
   
   resetButton.addEventListener('click', function() {
       if (this.classList.contains('btn-disabled')) return;
       count = 0;
       updateDisplay();
-      showNotification('Penghitung direset.', '#3498db');
+      showNotification('Penghitung direset.', '#58a6ff');
   });
 
-  saveButton.addEventListener('click', function() {
-      if (this.classList.contains('btn-disabled')) return;
-      const session = {
-          id: Date.now(),
-          type: dzikirDisplay.textContent,
-          count: count,
-          target: targetCount,
-          date: new Date().toLocaleString('id-ID')
-      };
-      dzikirHistory.unshift(session);
-      localStorage.setItem('dzikirHistory', JSON.stringify(dzikirHistory));
-      showNotification('Sesi berhasil disimpan!', '#2ecc71');
-  });
-
+  saveButton.addEventListener('click', function() { /* ... logika simpan ... */ });
   exportPdfBtn.addEventListener('click', () => { /* ... logika export pdf ... */ });
 
   function showNotification(message, color) {

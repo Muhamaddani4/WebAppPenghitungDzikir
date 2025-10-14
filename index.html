@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DzikirApp - Dashboard</title>
+  <title>DzikirApp - Aurora UI</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,33 +16,37 @@
 </head>
 <body>
 
+  <div class="background-aurora"></div>
+
   <div id="loading" class="loading-overlay"><div class="spinner"></div></div>
   <div id="notification" class="notification"></div>
   <div id="modal" class="modal">
     <div class="modal-content">
-      <div class="modal-title"></div><div class="modal-body"></div><div class="modal-footer"></div>
+      <h3 class="modal-title"></h3>
+      <div class="modal-body"></div>
+      <div class="modal-footer"></div>
     </div>
   </div>
   <div class="modal1" id="logoutModal">
     <div class="modal-content">
       <h2>Konfirmasi Logout</h2><p>Apakah Anda yakin ingin keluar?</p>
       <div class="modal-buttons">
-        <button class="btn-confirm" onclick="logout()">Ya</button>
-        <button class="btn-cancel1" onclick="closeLogoutModal()">Batal</button>
+        <button class="btn btn-primary" onclick="logout()">Ya</button>
+        <button class="btn" onclick="closeLogoutModal()">Batal</button>
       </div>
     </div>
   </div>
 
   <header class="app-header">
-      <h1 class="app-title">DzikirApp</h1>
+      <div class="nav-logo">DzikirApp</div>
       <div class="header-controls">
-          <button class="mode-toggle" id="modeToggle">
+          <button class="btn-icon mode-toggle" id="modeToggle">
               <img src="moon.png" alt="Mode Icon" id="modeIcon">
           </button>
           <div class="dropdown">
-              <button class="menu-toggle" id="menuToggle">&#9776;</button>
+              <button class="btn-icon menu-toggle" id="menuToggle">&#9776;</button>
               <div class="dropdown-menu" id="dropdownMenu">
-                  <a href="riwayat.html">Riwayat Dzikir</a>
+                  <a href="riwayat.html">Buka Riwayat</a>
                   <a href="#" onclick="openLogoutModal(event)">Logout</a>
               </div>
           </div>
@@ -52,9 +56,9 @@
   <main class="container">
     
     <section class="card settings-card">
-      <h2 class="card-title">Pengaturan</h2>
+      <h2 class="card-title">Pengaturan Dzikir</h2>
       <div class="input-group">
-          <label for="dzikir-type">Pilih Jenis Dzikir</label>
+          <label for="dzikir-type">Pilih Dzikir</label>
           <select id="dzikir-type">
               <option value="ListDzikir" hidden>Pilih dari daftar...</option>
               <option value="subhanallah">Subhanallah</option>
@@ -72,8 +76,8 @@
           </select>
       </div>
       <div class="input-group">
-          <label for="target-count">Tentukan Target Hitungan</label>
-          <input type="number" id="target-count" placeholder="Contoh: 33">
+          <label for="target-count">Tentukan Target</label>
+          <input type="number" id="target-count" placeholder="Contoh: 33, 99, 100">
       </div>
       <div class="dzikir-actions">
           <button id="add-dzikir-btn" class="btn">Tambah</button>
@@ -83,7 +87,7 @@
     </section>
 
     <section class="card counter-card">
-        <div id="dzikir-display" class="current-dzikir-text">Pilih Dzikir & Target</div>
+        <div id="dzikir-display" class="current-dzikir-text">Pilih Dzikir & Target untuk memulai</div>
         <div class="counter-dial">
             <svg class="progress-ring" width="200" height="200">
                 <circle class="progress-ring-bg" cx="100" cy="100" r="90"/>
@@ -105,7 +109,7 @@
        <h2 class="card-title">Opsi Lanjutan</h2>
         <div class="export-buttons">
             <button id="clear-history-btn" class="btn btn-danger">Hapus Riwayat</button>
-            <button id="export-pdf-btn" class="btn">Export PDF</button>
+            <button id="export-pdf-btn" class="btn">Export ke PDF</button>
         </div>
         <div id="admin-panel" class="admin-panel" style="display: none;">
             <h3 class="admin-title">Panel Admin</h3>
