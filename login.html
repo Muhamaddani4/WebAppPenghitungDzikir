@@ -2,106 +2,176 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DzikirApp - Login</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
   <style>
-    /* ... (CSS tetap sama, tidak perlu diubah) ... */
-    .login-banner { width: 100%; overflow: hidden; margin-bottom: 20px; }
-    .login-banner img { width: 100%; height: auto; display: block; }
-    @keyframes gradientAnimation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    :root {
+      --font-family: 'Poppins', sans-serif;
+      --text-color: #e6edf3;
+      --text-secondary: #8b949e;
+      --card-bg: rgba(22, 27, 34, 0.7);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --accent-color: #58a6ff;
+      --danger-color: #f85149;
+      --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --transition-speed: 0.3s;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @keyframes refreshAnimation { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
-    .refreshing { animation: refreshAnimation 0.5s forwards; }
-    html, body {
-      margin: 0; padding: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb); background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-family);
+      color: var(--text-color);
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .container {
-      background-color: rgba(255, 255, 255, 0.97); padding: 30px; border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); width: 100%; max-width: 400px;
-      text-align: center; animation: fadeIn 1s ease forwards;
+    .video-background {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      filter: brightness(0.4);
     }
-    h1 { color: #4A90E2; margin-bottom: 20px; font-weight: 600; }
-    .input-group { position: relative; margin: 15px 0; text-align: left; }
+    .auth-container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+    .auth-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .auth-card h1 {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
     .input-group input {
-      width: 300px; padding: 12px 40px 12px 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px 14px 14px 45px; /* Tambah padding kiri untuk ikon */
+      font-family: var(--font-family);
+      color: var(--text-color);
+      font-size: 1rem;
+      transition: border-color var(--transition-speed);
     }
-    .input-group input:focus { outline: none; border-color: #4A90E2; box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); }
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+    .input-group .icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+    }
+    .btn {
+      width: 100%;
+      border: 1px solid var(--accent-color);
+      border-radius: 10px;
+      background-color: var(--accent-color);
+      padding: 14px 20px;
+      font-family: var(--font-family);
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all var(--transition-speed) ease;
+    }
+    .btn:hover {
+      background-color: transparent;
+      color: var(--accent-color);
+    }
+    .auth-switch {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--text-secondary);
+    }
+    .auth-switch a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .error {
+      color: var(--danger-color);
+      font-size: 0.8rem;
+      margin-top: 5px;
+      min-height: 1.2em;
+    }
     .toggle-icon {
-      position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px;
-      cursor: pointer; opacity: 0.7; transition: opacity 0.3s ease; -webkit-user-drag: none; user-select: none;
+      position: absolute; right: 15px; top: 50%;
+      transform: translateY(-50%); cursor: pointer;
+      color: var(--text-secondary);
     }
-    .toggle-icon:hover { opacity: 1; }
-    .error { color: #e74c3c; font-size: 12px; margin-top: 5px; }
-    button {
-      width: 100%; padding: 14px; background: linear-gradient(90deg, #ff7e5f, #feb47b); color: #fff;
-      border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: transform 0.2s ease; margin-top: 10px;
-    }
-    button:hover { transform: scale(1.02); }
-    #refreshButton { background: linear-gradient(90deg, #6a11cb, #2575fc); margin-top: 15px; }
-    p { margin-top: 15px; font-size: 14px; }
-    p a { color: #4A90E2; text-decoration: none; user-select: none; -webkit-user-select: none; }
-    .loading-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5);
-      display: none; align-items: center; justify-content: center; z-index: 3000;
-    }
-    .loading-overlay.active { display: flex; }
   </style>
 </head>
 <body>
   
-  <div class="container" id="container">
-    <h1>Login</h1>
-    <form id="loginForm">
-      <div class="input-group">
-        <input type="email" id="email" placeholder="Email" required>
-        <div id="emailError" class="error"></div>
-      </div>
-      <div class="input-group">
-        <input type="password" id="password" placeholder="Password" required>
-        <img src="show.png" alt="Toggle" class="toggle-icon" id="togglePassword" oncontextmenu="return false;">
-        <div id="passwordError" class="error"></div>
-      </div>
-      <button type="submit">Masuk</button>
-    </form>
-    <button id="refreshButton">Refresh</button>
-    <p>Belum punya akun? <a href="register.html" oncontextmenu="return false;" style="user-select: none;">Daftar disini</a></p>
-  </div>
+  <video autoplay muted loop class="video-background">
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-red-gas-in-the-universe-14544-large.mp4" type="video/mp4">
+    Browser Anda tidak mendukung tag video.
+  </video>
 
-  <div class="loading-overlay" id="loadingOverlay"></div>
-
+  <main class="auth-container">
+    <section class="auth-card">
+        <h1>Login Akun</h1>
+        <form id="loginForm" novalidate>
+            <div class="input-group">
+                <span class="icon">&#9993;</span>
+                <input type="email" id="email" placeholder="Email" required>
+                <div id="emailError" class="error"></div>
+            </div>
+            <div class="input-group">
+                <span class="icon">&#128274;</span>
+                <input type="password" id="password" placeholder="Password" required>
+                <span id="togglePassword" class="toggle-icon">&#128065;</span>
+                <div id="passwordError" class="error"></div>
+            </div>
+            <button type="submit" class="btn">Masuk</button>
+        </form>
+        <p class="auth-switch">Belum punya akun? <a href="register.html">Daftar di sini</a></p>
+    </section>
+  </main>
+  
   <script>
-    window.addEventListener('wheel', e => { e.preventDefault(); location.reload(); }, { passive: false });
-    const refreshButton = document.getElementById('refreshButton');
-    const container = document.getElementById('container');
-    refreshButton.addEventListener('click', () => {
-      container.classList.add('refreshing');
-      setTimeout(() => location.reload(), 500);
-    });
-
+    // Fungsionalitas inti dari file login.html lama kamu tetap dipertahankan
     document.addEventListener('DOMContentLoaded', function() {
       function initializeAdmin() {
         const ADMIN_EMAIL = "admin.dani@dzikir.app";
         const ADMIN_PASS = "muhamad.dani";
         let users = JSON.parse(localStorage.getItem('users')) || [];
-        const adminExists = users.some(user => user.email === ADMIN_EMAIL);
-        if (!adminExists) {
-          const adminUser = {
-            username: "Admin",
-            email: ADMIN_EMAIL,
-            password: btoa(ADMIN_PASS),
-            role: "admin"
-          };
-          users.push(adminUser);
+        if (!users.some(u => u.email === ADMIN_EMAIL)) {
+          users.push({
+            username: "Admin", email: ADMIN_EMAIL,
+            password: btoa(ADMIN_PASS), role: "admin"
+          });
           localStorage.setItem('users', JSON.stringify(users));
-          console.log("Akun admin berhasil dibuat.");
         }
       }
       initializeAdmin();
@@ -111,41 +181,29 @@
       const password = document.getElementById('password');
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
-      const loadingOverlay = document.getElementById('loadingOverlay');
       const togglePassword = document.getElementById('togglePassword');
 
       togglePassword.addEventListener('click', function() {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
-        togglePassword.src = type === 'password' ? "show.png" : "hide.png";
+        this.innerHTML = type === 'password' ? '&#128065;' : '&#128064;';
       });
 
-      // --- PERBAIKAN DI DUA FUNGSI INI ---
       function validateEmail() {
         const emailValue = email.value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailValue)) {
-          emailError.textContent = 'Format email tidak valid';
-          return false;
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+          emailError.textContent = 'Format email tidak valid.'; return false;
         }
-        emailError.textContent = '';
-        return true;
+        emailError.textContent = ''; return true;
       }
       
       function validatePassword() {
-        const passwordValue = password.value;
-        if (passwordValue.length < 1) { // Bisa diubah jika perlu minimal karakter
-          passwordError.textContent = 'Password tidak boleh kosong';
-          return false;
+        if (password.value.length < 1) {
+          passwordError.textContent = 'Password tidak boleh kosong.'; return false;
         }
-        passwordError.textContent = '';
-        return true;
+        passwordError.textContent = ''; return true;
       }
-      // --- AKHIR PERBAIKAN ---
 
-      email.addEventListener('input', validateEmail);
-      password.addEventListener('input', validatePassword);
-      
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const isEmailValid = validateEmail();
@@ -158,10 +216,7 @@
           );
           if (user) {
             localStorage.setItem('currentUser', JSON.stringify(user));
-            loadingOverlay.classList.add('active');
-            setTimeout(() => {
-              window.location.href = 'loginRedirect.html';
-            }, 2000);
+            window.location.href = 'loginRedirect.html';
           } else {
             alert('Email atau password salah!');
           }
@@ -169,5 +224,6 @@
       });
     });
   </script>
+
 </body>
 </html>
