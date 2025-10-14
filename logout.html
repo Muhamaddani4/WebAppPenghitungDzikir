@@ -90,6 +90,10 @@
         window.location.href = 'login.html';
       }
     }, 1000);
+    function logout() {
+  localStorage.removeItem("role");
+  window.location.href = "login.html";
+}
   </script>
 </body>
 </html>

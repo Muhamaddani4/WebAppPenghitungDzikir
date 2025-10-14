@@ -146,10 +146,13 @@
       right: 0;
       bottom: 0;
       background: rgba(0,0,0,0.5);
-      display: none;
+      display: none; /* diubah jadi active oleh JS */
       align-items: center;
       justify-content: center;
       z-index: 3000;
+    }
+    .loading-overlay.active {
+        display: flex;
     }
   </style>
 </head>
@@ -173,17 +176,14 @@
     <p>Belum punya akun? <a href="register.html" oncontextmenu="return false;" style="user-select: none;">Daftar disini</a></p>
   </div>
 
-  <!-- Loading overlay (opsional) -->
   <div class="loading-overlay" id="loadingOverlay"></div>
 
   <script>
-    // Refresh halaman saat event scroll (wheel) terjadi
     window.addEventListener('wheel', function(e) {
       e.preventDefault();
       location.reload();
     }, { passive: false });
 
-    // Tombol refresh: animasi refresh sebelum reload
     const refreshButton = document.getElementById('refreshButton');
     const container = document.getElementById('container');
     refreshButton.addEventListener('click', function() {
@@ -201,7 +201,6 @@
       const passwordError = document.getElementById('passwordError');
       const loadingOverlay = document.getElementById('loadingOverlay');
 
-      // Toggle password
       const togglePassword = document.getElementById('togglePassword');
       togglePassword.addEventListener('click', function() {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -233,21 +232,27 @@
       email.addEventListener('input', validateEmail);
       password.addEventListener('input', validatePassword);
 
+      // --- PERUBAHAN DI SINI ---
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const isEmailValid = validateEmail();
         const isPasswordValid = validatePassword();
         if (isEmailValid && isPasswordValid) {
+          
+          // Logika disederhanakan:
+          // 1. Ambil semua user dari localStorage
           let users = JSON.parse(localStorage.getItem('users')) || [];
+          
+          // 2. Cari user berdasarkan email dan password yang diinput
           const user = users.find(u => 
             u.email.toLowerCase() === email.value.trim().toLowerCase() &&
-            u.password === btoa(password.value)
+            u.password === btoa(password.value) // Gunakan btoa biasa karena register juga pakai itu
           );
+          
+          // 3. Jika user ditemukan, langsung simpan datanya (yang sudah ada rolenya)
           if (user) {
             localStorage.setItem('currentUser', JSON.stringify(user));
-            // Tampilkan overlay loading
             loadingOverlay.classList.add('active');
-            // Redirect ke halaman login redirect
             setTimeout(() => {
               window.location.href = 'loginRedirect.html';
             }, 2000);
@@ -256,6 +261,7 @@
           }
         }
       });
+      // --- AKHIR PERUBAHAN ---
     });
   </script>
 </body>

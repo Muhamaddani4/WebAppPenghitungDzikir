@@ -202,9 +202,10 @@
         <button class="reset-btn btn-disabled" id="reset-btn">Reset</button>
         <button href="#successModal" class="save-btn btn-disabled" id="save-btn">Simpan Sesi</button>
       </div>
-      <h3>Untuk yang mau liat riwayatnya, klik titik 3 / dropdownMenu</h3>
+     <h3>Untuk yang mau liat riwayatnya, klik titik 3 / dropdownMenu</h3>
       <div class="export-buttons">
         <button id="export-pdf-btn">Export ke PDF</button>
+        <button id="view-storage-btn" style="display: none; background-color: #e67e22;">Lihat LocalStorage</button>
       </div>
     </div>
   </div>
@@ -219,6 +220,15 @@
       </div>
     </div>
   </div>
+  <script>
+    const role = localStorage.getItem("role");
+
+if (role === "admin") {
+  document.getElementById("btnLihatStorage").style.display = "block";
+} else {
+  document.getElementById("btnLihatStorage").style.display = "none";
+}
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

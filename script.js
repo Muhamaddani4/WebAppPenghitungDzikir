@@ -1,4 +1,63 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // --- Mengecek Role User dan Menampilkan Tombol Admin ---
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+  // Jika tidak ada user yang login, tendang ke halaman login
+  if (!currentUser) {
+    window.location.href = "login.html";
+    return; // Hentikan eksekusi script selanjutnya
+  }
+
+  // Jika user adalah admin, tampilkan tombolnya dan tambahkan event listener
+  if (currentUser.role === 'admin') {
+    const viewStorageBtn = document.getElementById('view-storage-btn');
+    if (viewStorageBtn) {
+      viewStorageBtn.style.display = 'inline-block';
+      viewStorageBtn.addEventListener('click', viewLocalStorage);
+    }
+  }
+
+  // --- Fungsi untuk Melihat LocalStorage (KHUSUS ADMIN) ---
+  function viewLocalStorage() {
+    // Kumpulkan semua data dari localStorage
+    const storageData = {
+      users: JSON.parse(localStorage.getItem('users')) || [],
+      dzikirHistory: JSON.parse(localStorage.getItem('dzikirHistory')) || [],
+      currentUser: JSON.parse(localStorage.getItem('currentUser')) || null,
+      mode: localStorage.getItem('mode') || 'light'
+    };
+
+    // Format data menjadi JSON yang mudah dibaca
+    const formattedData = JSON.stringify(storageData, null, 2);
+
+    // Gunakan modal yang sudah ada untuk menampilkan data
+    const modal = document.getElementById('modal');
+    const modalBody = modal.querySelector('.modal-body');
+    const modalFooter = modal.querySelector('.modal-footer');
+
+    // Kosongkan konten modal sebelumnya
+    modalBody.innerHTML = '';
+    modalFooter.innerHTML = '';
+
+    // Buat elemen <pre> agar format JSON tetap rapi
+    const pre = document.createElement('pre');
+    pre.style.textAlign = 'left';
+    pre.style.whiteSpace = 'pre-wrap';
+    pre.style.wordBreak = 'break-all';
+    pre.textContent = formattedData;
+    modalBody.appendChild(pre);
+
+    // Tambahkan tombol tutup
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Tutup';
+    closeBtn.classList.add('cancel'); // Pakai style tombol batal
+    closeBtn.onclick = () => modal.classList.remove('show');
+    modalFooter.appendChild(closeBtn);
+
+    // Tampilkan modal
+    modal.classList.add('show');
+  }
+
   // --- Setup Dropdown, Mode Toggle, dan Event Lain ---
   const menuToggle = document.getElementById('menuToggle');
   const dropdownMenu = document.getElementById('dropdownMenu');
@@ -54,12 +113,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // --- Modal Logout & Modal Function ---
   function openLogoutModal(e) {
-  if(e) e.preventDefault();
-  document.getElementById('logoutModal').style.display = 'flex';
-}
+    if (e) e.preventDefault();
+    document.getElementById('logoutModal').style.display = 'flex';
+  }
+
   function closeLogoutModal() {
     document.getElementById('logoutModal').style.display = 'none';
   }
+
   function logout() {
     localStorage.removeItem('currentUser');
     window.location.href = "logout.html";
@@ -74,13 +135,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalFooter = modal.querySelector('.modal-footer');
     modalBody.innerHTML = "";
     modalFooter.innerHTML = "";
-    if(options.message) {
+    if (options.message) {
       const p = document.createElement('p');
       p.textContent = options.message;
       modalBody.appendChild(p);
     }
     let inputElem = null;
-    if(options.input) {
+    if (options.input) {
       inputElem = document.createElement('input');
       inputElem.type = "text";
       inputElem.value = options.defaultValue || "";
@@ -91,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     confirmBtn.classList.add('confirm');
     confirmBtn.addEventListener('click', function() {
       modal.classList.remove('show');
-      if(options.onConfirm) {
+      if (options.onConfirm) {
         options.onConfirm(inputElem ? inputElem.value : null);
       }
     });
@@ -100,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     cancelBtn.classList.add('cancel');
     cancelBtn.addEventListener('click', function() {
       modal.classList.remove('show');
-      if(options.onCancel) options.onCancel();
+      if (options.onCancel) options.onCancel();
     });
     modalFooter.appendChild(confirmBtn);
     modalFooter.appendChild(cancelBtn);
@@ -154,13 +215,17 @@ document.addEventListener('DOMContentLoaded', function() {
       const animDelay = Math.random() * 0.5;
       particle.style.animation = `float ${animDuration}s ease-in ${animDelay}s 1`;
       particlesContainer.appendChild(particle);
-      setTimeout(() => { particle.remove(); }, (animDuration + animDelay) * 1000);
+      setTimeout(() => {
+        particle.remove();
+      }, (animDuration + animDelay) * 1000);
     }
   }
 
   function addRippleEffect(button) {
     button.classList.add('clicked');
-    setTimeout(() => { button.classList.remove('clicked'); }, 700);
+    setTimeout(() => {
+      button.classList.remove('clicked');
+    }, 700);
   }
 
   function updateDisplay() {
@@ -177,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateButtonsState() {
     const isDzikirSelected = (dzikirTypeSelect.value && dzikirTypeSelect.value !== "ListDzikir");
     const targetValid = (parseInt(targetCountInput.value) > 0);
-    if(isDzikirSelected && targetValid) {
+    if (isDzikirSelected && targetValid) {
       countButton.classList.remove("btn-disabled");
       resetButton.classList.remove("btn-disabled");
       saveButton.classList.remove("btn-disabled");
@@ -280,19 +345,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-    // Event listener untuk tombol hapus semua riwayat
+  // Event listener untuk tombol hapus semua riwayat
   clearHistoryBtn.addEventListener('click', function() {
     if (confirm('Anda yakin ingin menghapus seluruh riwayat dzikir?')) {
       dzikirHistory = [];
       localStorage.removeItem('dzikirHistory');
       showNotification("Hapus semua riwayat☑️");
       // Panggil fungsi untuk memperbarui tampilan riwayat jika ada
-      updateHistoryDisplay();
+      if (typeof updateHistoryDisplay === "function") {
+        updateHistoryDisplay();
+      }
     }
   });
 
   countButton.addEventListener('click', function() {
-    if(this.classList.contains("btn-disabled")) {
+    if (this.classList.contains("btn-disabled")) {
       openModal({
         message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
         input: false,
@@ -306,7 +373,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     count++;
     counterDisplay.classList.add('counter-animation');
-    setTimeout(() => { counterDisplay.classList.remove('counter-animation'); }, 500);
+    setTimeout(() => {
+      counterDisplay.classList.remove('counter-animation');
+    }, 500);
     updateDisplay();
     addRippleEffect(countButton);
     const buttonRect = countButton.getBoundingClientRect();
@@ -329,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   resetButton.addEventListener('click', function() {
-    if(this.classList.contains("btn-disabled")) {
+    if (this.classList.contains("btn-disabled")) {
       openModal({
         message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
         input: false,
@@ -346,90 +415,94 @@ document.addEventListener('DOMContentLoaded', function() {
     addRippleEffect(resetButton);
   });
 
-  
-// Tombol Simpan Sesi
-saveButton.addEventListener('click', function() {
-  if (this.classList.contains("btn-disabled")) {
-    openModal({
-      message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
-      input: false,
-      confirmText: "OK"
-    });
-    return;
-  }
-  
-  const loadingOverlay = document.getElementById('loading');
-  // Tampilkan overlay loading
-  loadingOverlay.style.display = 'flex';
-  
-  // Simulasikan proses penyimpanan selama 2 detik
-  setTimeout(() => {
-    try {
-      // Lakukan penyimpanan sesi
-      const dzikirText = dzikirDisplay.textContent;
-      const currentDate = new Date();
-      const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}`;
-      const session = {
-        id: Date.now(),
-        type: dzikirText,
-        count: count,
-        target: targetCount,
-        date: formattedDate
-      };
-      dzikirHistory.unshift(session);
-      localStorage.setItem('dzikirHistory', JSON.stringify(dzikirHistory));
-      
-      // Pastikan fungsi updateHistoryList() telah didefinisikan
-      if (typeof updateHistoryList === "function") {
-        updateHistoryList();
-      }
-      
-      addRippleEffect(saveButton);
-      
-      // Tampilkan notifikasi setelah proses penyimpanan selesai
-      showNotification("Berhasil Simpan sesi Dzikir", "#2ecc71");
-      
-    } catch (error) {
-      console.error("Error saat menyimpan sesi:", error);
-      showNotification("Terjadi error saat menyimpan sesi", "#e74c3c");
-    } finally {
-      // Pastikan overlay loading disembunyikan
-      loadingOverlay.style.display = 'none';
+
+  // Tombol Simpan Sesi
+  saveButton.addEventListener('click', function() {
+    if (this.classList.contains("btn-disabled")) {
+      openModal({
+        message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
+        input: false,
+        confirmText: "OK"
+      });
+      return;
     }
-  }, 2000);
-});
+
+    const loadingOverlay = document.getElementById('loading');
+    // Tampilkan overlay loading
+    loadingOverlay.style.display = 'flex';
+
+    // Simulasikan proses penyimpanan selama 2 detik
+    setTimeout(() => {
+      try {
+        // Lakukan penyimpanan sesi
+        const dzikirText = dzikirDisplay.textContent;
+        const currentDate = new Date();
+        const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}`;
+        const session = {
+          id: Date.now(),
+          type: dzikirText,
+          count: count,
+          target: targetCount,
+          date: formattedDate
+        };
+        dzikirHistory.unshift(session);
+        localStorage.setItem('dzikirHistory', JSON.stringify(dzikirHistory));
+
+        // Pastikan fungsi updateHistoryList() telah didefinisikan
+        if (typeof updateHistoryList === "function") {
+          updateHistoryList();
+        }
+
+        addRippleEffect(saveButton);
+
+        // Tampilkan notifikasi setelah proses penyimpanan selesai
+        showNotification("Berhasil Simpan sesi Dzikir", "#2ecc71");
+
+      } catch (error) {
+        console.error("Error saat menyimpan sesi:", error);
+        showNotification("Terjadi error saat menyimpan sesi", "#e74c3c");
+      } finally {
+        // Pastikan overlay loading disembunyikan
+        loadingOverlay.style.display = 'none';
+      }
+    }, 2000);
+  });
 
   exportPdfBtn.addEventListener('click', function() {
-  if(dzikirHistory.length === 0) {
-    openModal({
-      message: "Tidak ada data riwayat untuk diekspor!",
-      input: false,
-      confirmText: "OK"
+    if (dzikirHistory.length === 0) {
+      openModal({
+        message: "Tidak ada data riwayat untuk diekspor!",
+        input: false,
+        confirmText: "OK"
+      });
+      return;
+    }
+    const {
+      jsPDF
+    } = window.jspdf;
+    const doc = new jsPDF();
+    // Tambahkan kolom "No" di awal
+    const columns = ["No", "Jenis Dzikir", "Hitungan", "Target", "Tanggal"];
+    // Sertakan nomor urut di setiap baris
+    const rows = dzikirHistory.map((session, index) => [
+      index + 1,
+      session.type,
+      session.count,
+      session.target || "∞",
+      session.date
+    ]);
+    doc.autoTable({
+      head: [columns],
+      body: rows,
+      startY: 20,
     });
-    return;
-  }
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  // Tambahkan kolom "No" di awal
-  const columns = ["No", "Jenis Dzikir", "Hitungan", "Target", "Tanggal"];
-  // Sertakan nomor urut di setiap baris
-  const rows = dzikirHistory.map((session, index) => [
-    index + 1,
-    session.type,
-    session.count,
-    session.target || "∞",
-    session.date
-  ]);
-  doc.autoTable({
-    head: [columns],
-    body: rows,
-    startY: 20,
+    doc.save("riwayat_dzikir.pdf");
   });
-  doc.save("riwayat_dzikir.pdf");
-});
 
-  if(!localStorage.getItem('currentUser')){
-    window.location.href = "login.html";
+  // Fungsi updateHistoryList yang mungkin belum ada
+  function updateHistoryList() {
+    // Fungsi ini dikosongkan karena tidak ada elemen 'history-list' di index.html
+    // Jika ada, logikanya akan ditaruh di sini.
   }
 
   updateDisplay();
@@ -445,7 +518,7 @@ saveButton.addEventListener('click', function() {
 
   document.addEventListener('keydown', function(event) {
     if (event.key === ' ' || event.key === 'ArrowUp') {
-      if(!countButton.classList.contains("btn-disabled")){
+      if (!countButton.classList.contains("btn-disabled")) {
         countButton.click();
       } else {
         openModal({
@@ -456,7 +529,7 @@ saveButton.addEventListener('click', function() {
       }
       event.preventDefault();
     } else if (event.key === 'r' || event.key === 'R') {
-      if(!resetButton.classList.contains("btn-disabled")){
+      if (!resetButton.classList.contains("btn-disabled")) {
         resetButton.click();
       } else {
         openModal({
@@ -466,7 +539,7 @@ saveButton.addEventListener('click', function() {
         });
       }
     } else if (event.key === 's' || event.key === 'S') {
-      if(!saveButton.classList.contains("btn-disabled")){
+      if (!saveButton.classList.contains("btn-disabled")) {
         saveButton.click();
       } else {
         openModal({
