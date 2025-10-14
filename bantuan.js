@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- PENGATURAN EMAILJS: GANTI DENGAN KUNCI ANDA ---
     // Pastikan kamu sudah mengisi semua kunci dari akun EmailJS-mu
-    const EMAILJS_PUBLIC_KEY = "Tw7sl_LV4OeiEicKp";
+    const EMAILJS_PUBLIC_KEY = "vazdza8t-9RJukofM";
     const EMAILJS_SERVICE_ID = "service_o1ce0f6";
-    const EMAILJS_TEMPLATE_ID = "template_y185231";
+    const EMAILJS_TEMPLATE_ID = "template_reb1rty";
 
     // Inisialisasi EmailJS dengan Public Key Anda
     // Cek dulu apakah library emailjs sudah ada
