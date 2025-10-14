@@ -2,98 +2,84 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Logout - Aplikasi Penghitung Dzikir</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logout - DzikirApp</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
   <style>
-    /* Atur background tetap sesuai tema */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      background-size: cover;
+    /* Style ini sama persis dengan loginRedirect.html untuk konsistensi */
+    .redirect-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      padding: 20px;
     }
 
-    /* Container pesan logout */
-    .logout-container {
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    .redirect-card {
       text-align: center;
-      animation: slideIn 0.8s ease-out;
-    }
-    @keyframes slideIn {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
+      max-width: 450px;
     }
 
-    .logout-container h2 {
-      margin: 0 0 20px;
-      color: #4A90E2;
-      font-size: 28px;
-    }
-    .logout-container p {
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    /* Spinner animasi */
     .spinner {
-      margin: 0 auto 20px auto;
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #4A90E2;
+      width: 60px;
+      height: 60px;
+      border: 5px solid var(--border-color);
+      border-top-color: var(--accent-color);
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin: 0 auto 25px;
     }
+    
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
     }
 
-    /* Countdown text */
-    .countdown {
-      font-size: 16px;
-      color: #555;
-      margin-top: 10px;
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
     }
   </style>
 </head>
 <body>
-  <div class="logout-container">
-    <div class="spinner"></div>
-    <h2>Logout Berhasil</h2>
-    <p>Anda telah logout. Harap tunggu, Anda akan diarahkan ke halaman login.</p>
-    <div class="countdown" id="countdown">Redirect in 3 seconds...</div>
-  </div>
 
+  <div class="background-aurora"></div>
+
+  <main class="redirect-container">
+    <section class="card redirect-card">
+        <div class="spinner"></div>
+        <h2>Logout Berhasil</h2>
+        <p>Anda telah keluar. Mengalihkan ke halaman login...</p>
+        <p id="countdown">Dalam 3 detik...</p>
+    </section>
+  </main>
+  
   <script>
-    // Hapus data login (contoh: hapus key 'currentUser' di localStorage)
+    // PENTING: Hapus data user dari localStorage saat halaman ini dimuat
     localStorage.removeItem('currentUser');
-    
-    // Countdown selama 3 detik
+
     let seconds = 3;
     const countdownEl = document.getElementById('countdown');
+    
     const interval = setInterval(() => {
       seconds--;
-      countdownEl.textContent = `Redirect in ${seconds} seconds...`;
+      countdownEl.textContent = `Dalam ${seconds} detik...`;
       if (seconds <= 0) {
         clearInterval(interval);
         window.location.href = 'login.html';
       }
     }, 1000);
-    function logout() {
-  localStorage.removeItem("role");
-  window.location.href = "login.html";
-}
   </script>
 </body>
 </html>

@@ -2,76 +2,76 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Redirect - Aplikasi Penghitung Dzikir</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirect - DzikirApp</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      background-size: cover;
+    /* Style tambahan khusus untuk halaman ini */
+    .redirect-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      padding: 20px;
     }
-    .redirect-container {
+
+    .redirect-card {
       text-align: center;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      animation: slideIn 0.8s ease-out;
+      max-width: 450px;
     }
-    @keyframes slideIn {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    .redirect-container h2 {
-      margin-bottom: 20px;
-      color: #4A90E2;
-      font-size: 28px;
-    }
-    .redirect-container p {
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 20px;
-    }
+
     .spinner {
-      margin: 0 auto 20px;
-      width: 50px;
-      height: 50px;
-      border: 5px solid #f3f3f3;
-      border-top: 5px solid #4A90E2;
+      width: 60px;
+      height: 60px;
+      border: 5px solid var(--border-color);
+      border-top-color: var(--accent-color);
       border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin: 0 auto 25px;
     }
+    
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      to { transform: rotate(360deg); }
     }
-    .countdown {
-      font-size: 16px;
-      color: #555;
-      margin-top: 10px;
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text-color);
+    }
+
+    p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
     }
   </style>
 </head>
 <body>
-  <div class="redirect-container">
-    <div class="spinner"></div>
-    <h2>Login Berhasil</h2>
-    <p>Anda telah berhasil login. Sedang mengalihkan ke halaman utama...</p>
-    <div class="countdown" id="countdown">Redirect in 3 seconds...</div>
-  </div>
+
+  <div class="background-aurora"></div>
+
+  <main class="redirect-container">
+    <section class="card redirect-card">
+        <div class="spinner"></div>
+        <h2>Login Berhasil!</h2>
+        <p>Selamat datang kembali. Anda akan diarahkan ke halaman utama.</p>
+        <p id="countdown">Dalam 3 detik...</p>
+    </section>
+  </main>
+  
   <script>
     let seconds = 3;
     const countdownEl = document.getElementById('countdown');
+    
     const interval = setInterval(() => {
       seconds--;
-      countdownEl.textContent = `Redirect in ${seconds} seconds...`;
+      countdownEl.textContent = `Dalam ${seconds} detik...`;
       if (seconds <= 0) {
         clearInterval(interval);
         window.location.href = 'index.html';
