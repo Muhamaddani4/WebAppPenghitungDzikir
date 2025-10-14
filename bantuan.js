@@ -1,54 +1,49 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Keamanan: Cek apakah user sudah login
     if (!localStorage.getItem('currentUser')) {
         window.location.href = "login.html";
         return;
     }
 
-    // --- PENGATURAN EMAILJS: GANTI DENGAN KUNCI ANDA ---
-    // Pastikan kamu sudah mengisi semua kunci dari akun EmailJS-mu
-    const EMAILJS_PUBLIC_KEY = "vazdza8t-9RJukofM";
-    const EMAILJS_SERVICE_ID = "service_o1ce0f6";
-    const EMAILJS_TEMPLATE_ID = "template_reb1rty";
+    // --- PENGATURAN EMAILJS: PASTIKAN INI SUDAH BENAR ---
+    const EMAILJS_PUBLIC_KEY = "Z1VSwVF-QYVQAtt35";
+    const EMAILJS_SERVICE_ID = "service_638wwob";
+    const EMAILJS_TEMPLATE_ID = "template_nsnzq3x";
 
-    // Inisialisasi EmailJS dengan Public Key Anda
-    // Cek dulu apakah library emailjs sudah ada
     if (typeof emailjs !== 'undefined') {
         emailjs.init(EMAILJS_PUBLIC_KEY);
     } else {
-        console.error("EmailJS SDK tidak ditemukan. Pastikan sudah di-load di bantuan.html");
+        console.error("SDK EmailJS tidak ditemukan. Pastikan koneksi internet aktif dan script di bantuan.html sudah benar.");
+        alert("Gagal memuat layanan pengiriman pesan. Periksa koneksi internet Anda.");
+        return;
     }
 
     const contactForm = document.getElementById('contact-form');
-    const submitButton = document.getElementById('submit-button'); // Pastikan ID ini ada di HTML
+    const submitButton = document.getElementById('submit-button');
     
     if (contactForm) {
         contactForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Ubah teks tombol dan nonaktifkan
             submitButton.textContent = 'Mengirim...';
             submitButton.disabled = true;
 
-            // Siapkan parameter agar cocok dengan template baru di EmailJS
             const templateParams = {
                 from_name: document.getElementById('contact-name').value,
                 subject: document.getElementById('contact-subject').value,
                 message: document.getElementById('contact-message').value,
             };
             
-            // Kirim email menggunakan EmailJS
             emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                     alert('Pesan berhasil terkirim! Terima kasih.');
-                    contactForm.reset(); // Kosongkan form
+                    contactForm.reset();
                 }, function(error) {
                     console.log('FAILED...', error);
-                    alert('Maaf, terjadi kesalahan. Pastikan kunci EmailJS sudah benar dan coba lagi.');
+                    // Pesan error yang lebih detail
+                    alert(`Maaf, terjadi kesalahan.\n\nError: ${JSON.stringify(error)}`);
                 })
                 .finally(function() {
-                    // Kembalikan tombol ke keadaan semula
                     submitButton.textContent = 'Kirim Pesan';
                     submitButton.disabled = false;
                 });
