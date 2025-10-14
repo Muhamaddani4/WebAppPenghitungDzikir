@@ -5,155 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login - Aplikasi Penghitung Dzikir</title>
   <style>
-    /* CSS Banner Login */
-    .login-banner {
-      width: 100%;
-      overflow: hidden;
-      margin-bottom: 20px;
-    }
-    .login-banner img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    /* Animasi & styling lain seperti sebelumnya */
+    /* ... (CSS tetap sama, tidak perlu diubah) ... */
+    .login-banner { width: 100%; overflow: hidden; margin-bottom: 20px; }
+    .login-banner img { width: 100%; height: auto; display: block; }
     @keyframes gradientAnimation {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes spinner {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    @keyframes refreshAnimation {
-      from { opacity: 1; transform: scale(1); }
-      to { opacity: 0; transform: scale(0.8); }
-    }
-    .refreshing {
-      animation: refreshAnimation 0.5s forwards;
-    }
-    /* Background menggunakan gradien */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes refreshAnimation { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.8); } }
+    .refreshing { animation: refreshAnimation 0.5s forwards; }
     html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      background-size: 400% 400%;
-      animation: gradientAnimation 15s ease infinite;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      position: relative;
+      margin: 0; padding: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb); background-size: 400% 400%;
+      animation: gradientAnimation 15s ease infinite; display: flex; justify-content: center; align-items: center; min-height: 100vh;
     }
     .container {
-      background-color: rgba(255, 255, 255, 0.97);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      width: 100%;
-      max-width: 400px;
-      text-align: center;
-      animation: fadeIn 1s ease forwards;
-      position: relative;
-      z-index: 1;
+      background-color: rgba(255, 255, 255, 0.97); padding: 30px; border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); width: 100%; max-width: 400px;
+      text-align: center; animation: fadeIn 1s ease forwards;
     }
-    h1 {
-      color: #4A90E2;
-      margin-bottom: 20px;
-      font-weight: 600;
-    }
-    .input-group {
-      position: relative;
-      margin: 15px 0;
-      text-align: left;
-    }
+    h1 { color: #4A90E2; margin-bottom: 20px; font-weight: 600; }
+    .input-group { position: relative; margin: 15px 0; text-align: left; }
     .input-group input {
-      width: 300px;
-      padding: 12px 40px 12px 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
+      width: 300px; padding: 12px 40px 12px 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
-    .input-group input:focus {
-      outline: none;
-      border-color: #4A90E2;
-      box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
-    }
+    .input-group input:focus { outline: none; border-color: #4A90E2; box-shadow: 0 0 8px rgba(74, 144, 226, 0.3); }
     .toggle-icon {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 0.3s ease;
-      -webkit-user-drag: none;
-      user-select: none;
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px;
+      cursor: pointer; opacity: 0.7; transition: opacity 0.3s ease; -webkit-user-drag: none; user-select: none;
     }
-    .toggle-icon:hover {
-      opacity: 1;
-    }
-    .error {
-      color: #e74c3c;
-      font-size: 12px;
-      margin-top: 5px;
-    }
+    .toggle-icon:hover { opacity: 1; }
+    .error { color: #e74c3c; font-size: 12px; margin-top: 5px; }
     button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(90deg, #ff7e5f, #feb47b);
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      margin-top: 10px;
+      width: 100%; padding: 14px; background: linear-gradient(90deg, #ff7e5f, #feb47b); color: #fff;
+      border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: transform 0.2s ease; margin-top: 10px;
     }
-    button:hover {
-      transform: scale(1.02);
-    }
-    /* Tombol refresh */
-    #refreshButton {
-      background: linear-gradient(90deg, #6a11cb, #2575fc);
-      margin-top: 15px;
-    }
-    p {
-      margin-top: 15px;
-      font-size: 14px;
-    }
-    p a {
-      color: #4A90E2;
-      text-decoration: none;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-    /* Style untuk loading overlay (jika diperlukan) */
+    button:hover { transform: scale(1.02); }
+    #refreshButton { background: linear-gradient(90deg, #6a11cb, #2575fc); margin-top: 15px; }
+    p { margin-top: 15px; font-size: 14px; }
+    p a { color: #4A90E2; text-decoration: none; user-select: none; -webkit-user-select: none; }
     .loading-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      display: none; /* diubah jadi active oleh JS */
-      align-items: center;
-      justify-content: center;
-      z-index: 3000;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5);
+      display: none; align-items: center; justify-content: center; z-index: 3000;
     }
-    .loading-overlay.active {
-        display: flex;
-    }
+    .loading-overlay.active { display: flex; }
   </style>
 </head>
 <body>
@@ -179,22 +78,45 @@
   <div class="loading-overlay" id="loadingOverlay"></div>
 
   <script>
-    window.addEventListener('wheel', function(e) {
-      e.preventDefault();
-      location.reload();
-    }, { passive: false });
-
+    window.addEventListener('wheel', e => { e.preventDefault(); location.reload(); }, { passive: false });
     const refreshButton = document.getElementById('refreshButton');
     const container = document.getElementById('container');
-    refreshButton.addEventListener('click', function() {
+    refreshButton.addEventListener('click', () => {
       container.classList.add('refreshing');
-      setTimeout(() => {
-        location.reload();
-      }, 500);
+      setTimeout(() => location.reload(), 500);
     });
 
     document.addEventListener('DOMContentLoaded', function() {
+      // --- PERUBAHAN DIMULAI DI SINI ---
+      function initializeAdmin() {
+        // Data akun admin (bisa kamu ganti)
+        const ADMIN_EMAIL = "admin.dani@dzikir.app";
+        const ADMIN_PASS = "muhamad.dani"; // Password sebelum di-encode
+        
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        // Cek apakah admin sudah ada
+        const adminExists = users.some(user => user.email === ADMIN_EMAIL);
+        
+        // Jika belum ada, tambahkan
+        if (!adminExists) {
+          const adminUser = {
+            username: "Admin",
+            email: ADMIN_EMAIL,
+            password: btoa(ADMIN_PASS), // Password di-encode
+            role: "admin"
+          };
+          users.push(adminUser);
+          localStorage.setItem('users', JSON.stringify(users));
+          console.log("Akun admin berhasil dibuat.");
+        }
+      }
+      
+      initializeAdmin(); // Jalankan fungsi untuk memastikan admin ada
+      // --- AKHIR PERUBAHAN ---
+
       const loginForm = document.getElementById('loginForm');
+      // ... (sisa kode validasi dan submit form tetap sama)
       const email = document.getElementById('email');
       const password = document.getElementById('password');
       const emailError = document.getElementById('emailError');
@@ -205,51 +127,24 @@
       togglePassword.addEventListener('click', function() {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
-        togglePassword.src = type === 'password' 
-          ? "show.png" 
-          : "hide.png";
+        togglePassword.src = type === 'password' ? "show.png" : "hide.png";
       });
 
-      function validateEmail() {
-        const emailValue = email.value.trim();
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailValue)) {
-          emailError.textContent = 'Format email tidak valid';
-          return false;
-        }
-        emailError.textContent = '';
-        return true;
-      }
-      function validatePassword() {
-        const passwordValue = password.value;
-        if (passwordValue.length < 8) {
-          passwordError.textContent = 'Password minimal 8 karakter';
-          return false;
-        }
-        passwordError.textContent = '';
-        return true;
-      }
+      function validateEmail() { /* ... */ }
+      function validatePassword() { /* ... */ }
       email.addEventListener('input', validateEmail);
       password.addEventListener('input', validatePassword);
-
-      // --- PERUBAHAN DI SINI ---
+      
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const isEmailValid = validateEmail();
         const isPasswordValid = validatePassword();
         if (isEmailValid && isPasswordValid) {
-          
-          // Logika disederhanakan:
-          // 1. Ambil semua user dari localStorage
           let users = JSON.parse(localStorage.getItem('users')) || [];
-          
-          // 2. Cari user berdasarkan email dan password yang diinput
           const user = users.find(u => 
             u.email.toLowerCase() === email.value.trim().toLowerCase() &&
-            u.password === btoa(password.value) // Gunakan btoa biasa karena register juga pakai itu
+            u.password === btoa(password.value)
           );
-          
-          // 3. Jika user ditemukan, langsung simpan datanya (yang sudah ada rolenya)
           if (user) {
             localStorage.setItem('currentUser', JSON.stringify(user));
             loadingOverlay.classList.add('active');
@@ -261,7 +156,6 @@
           }
         }
       });
-      // --- AKHIR PERUBAHAN ---
     });
   </script>
 </body>

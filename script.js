@@ -1,63 +1,99 @@
 document.addEventListener('DOMContentLoaded', function() {
-  // --- Mengecek Role User dan Menampilkan Tombol Admin ---
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-  // Jika tidak ada user yang login, tendang ke halaman login
   if (!currentUser) {
     window.location.href = "login.html";
-    return; // Hentikan eksekusi script selanjutnya
+    return;
   }
 
-  // Jika user adalah admin, tampilkan tombolnya dan tambahkan event listener
+  // --- Blok Khusus Admin ---
   if (currentUser.role === 'admin') {
     const viewStorageBtn = document.getElementById('view-storage-btn');
+    const manageUsersBtn = document.getElementById('manage-users-btn');
+
     if (viewStorageBtn) {
       viewStorageBtn.style.display = 'inline-block';
       viewStorageBtn.addEventListener('click', viewLocalStorage);
     }
+    if (manageUsersBtn) {
+      manageUsersBtn.style.display = 'inline-block';
+      manageUsersBtn.addEventListener('click', manageUsers);
+    }
   }
 
-  // --- Fungsi untuk Melihat LocalStorage (KHUSUS ADMIN) ---
+  // --- Fungsi untuk Melihat LocalStorage (Admin) ---
   function viewLocalStorage() {
-    // Kumpulkan semua data dari localStorage
-    const storageData = {
-      users: JSON.parse(localStorage.getItem('users')) || [],
-      dzikirHistory: JSON.parse(localStorage.getItem('dzikirHistory')) || [],
-      currentUser: JSON.parse(localStorage.getItem('currentUser')) || null,
-      mode: localStorage.getItem('mode') || 'light'
-    };
-
-    // Format data menjadi JSON yang mudah dibaca
+    const storageData = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      try {
+        storageData[key] = JSON.parse(localStorage.getItem(key));
+      } catch (e) {
+        storageData[key] = localStorage.getItem(key);
+      }
+    }
     const formattedData = JSON.stringify(storageData, null, 2);
+    openModal({
+        title: "Isi LocalStorage",
+        contentHTML: `<pre style="text-align: left; white-space: pre-wrap; word-break: break-all;">${formattedData}</pre>`,
+        confirmText: "Tutup"
+    });
+  }
+  
+  // --- Fungsi Baru: Kelola User (Admin) ---
+  function manageUsers() {
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    
+    let userListHTML = '<ul style="list-style: none; padding: 0; text-align: left;">';
+    users.forEach(user => {
+      // Tombol hapus dinonaktifkan untuk admin yang sedang login
+      const isCurrentUser = user.email === currentUser.email;
+      const deleteButton = isCurrentUser 
+        ? `<button class="delete-user-btn" data-email="${user.email}" disabled title="Tidak dapat menghapus diri sendiri">Hapus</button>`
+        : `<button class="delete-user-btn" data-email="${user.email}">Hapus</button>`;
 
-    // Gunakan modal yang sudah ada untuk menampilkan data
-    const modal = document.getElementById('modal');
-    const modalBody = modal.querySelector('.modal-body');
-    const modalFooter = modal.querySelector('.modal-footer');
-
-    // Kosongkan konten modal sebelumnya
-    modalBody.innerHTML = '';
-    modalFooter.innerHTML = '';
-
-    // Buat elemen <pre> agar format JSON tetap rapi
-    const pre = document.createElement('pre');
-    pre.style.textAlign = 'left';
-    pre.style.whiteSpace = 'pre-wrap';
-    pre.style.wordBreak = 'break-all';
-    pre.textContent = formattedData;
-    modalBody.appendChild(pre);
-
-    // Tambahkan tombol tutup
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = 'Tutup';
-    closeBtn.classList.add('cancel'); // Pakai style tombol batal
-    closeBtn.onclick = () => modal.classList.remove('show');
-    modalFooter.appendChild(closeBtn);
-
-    // Tampilkan modal
-    modal.classList.add('show');
+      userListHTML += `
+        <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #eee;">
+          <span>
+            <strong>${user.username}</strong> (${user.email}) - <em>${user.role}</em>
+          </span>
+          ${deleteButton}
+        </li>`;
+    });
+    userListHTML += '</ul>';
+    
+    openModal({
+        title: "Kelola Pengguna",
+        contentHTML: userListHTML,
+        confirmText: "Tutup",
+        onRender: () => {
+          // Tambahkan event listener setelah modal dirender
+          document.querySelectorAll('.delete-user-btn').forEach(button => {
+            button.addEventListener('click', function() {
+              const userEmail = this.getAttribute('data-email');
+              if (confirm(`Yakin ingin menghapus user dengan email: ${userEmail}? Tindakan ini tidak bisa dibatalkan.`)) {
+                deleteUser(userEmail);
+              }
+            });
+          });
+        }
+    });
   }
 
+  // --- Fungsi Baru: Hapus User (Admin) ---
+  function deleteUser(email) {
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    const updatedUsers = users.filter(user => user.email !== email);
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    
+    // Refresh modal list
+    manageUsers(); 
+    showNotification(`User ${email} berhasil dihapus.`, '#e74c3c');
+  }
+
+  // --- (Sisa kode script.js kamu tetap sama persis seperti sebelumnya) ---
+  // --- Pastikan untuk meng-copy sisa kode dari file script.js kamu yang lama ke sini ---
+  
   // --- Setup Dropdown, Mode Toggle, dan Event Lain ---
   const menuToggle = document.getElementById('menuToggle');
   const dropdownMenu = document.getElementById('dropdownMenu');
@@ -110,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.setItem('mode', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     updateIcon();
   });
-
+  
   // --- Modal Logout & Modal Function ---
   function openLogoutModal(e) {
     if (e) e.preventDefault();
@@ -129,47 +165,72 @@ document.addEventListener('DOMContentLoaded', function() {
   window.closeLogoutModal = closeLogoutModal;
   window.logout = logout;
 
+  // --- MODIFIKASI openModal agar lebih fleksibel ---
   function openModal(options) {
     const modal = document.getElementById('modal');
+    const modalTitle = modal.querySelector('.modal-title'); // Asumsi ada elemen title
     const modalBody = modal.querySelector('.modal-body');
     const modalFooter = modal.querySelector('.modal-footer');
+    
+    // Reset
     modalBody.innerHTML = "";
     modalFooter.innerHTML = "";
+    if(modalTitle) modalTitle.textContent = options.title || "Konfirmasi";
+
+    // Konten bisa berupa teks atau HTML
     if (options.message) {
       const p = document.createElement('p');
       p.textContent = options.message;
       modalBody.appendChild(p);
+    } else if (options.contentHTML) {
+      modalBody.innerHTML = options.contentHTML;
     }
+
     let inputElem = null;
     if (options.input) {
       inputElem = document.createElement('input');
       inputElem.type = "text";
       inputElem.value = options.defaultValue || "";
+      inputElem.style.width = '95%';
+      inputElem.style.padding = '10px';
       modalBody.appendChild(inputElem);
     }
-    const confirmBtn = document.createElement('button');
-    confirmBtn.textContent = options.confirmText || "Simpan";
-    confirmBtn.classList.add('confirm');
-    confirmBtn.addEventListener('click', function() {
-      modal.classList.remove('show');
-      if (options.onConfirm) {
-        options.onConfirm(inputElem ? inputElem.value : null);
-      }
-    });
-    const cancelBtn = document.createElement('button');
-    cancelBtn.textContent = options.cancelText || "Batal";
-    cancelBtn.classList.add('cancel');
-    cancelBtn.addEventListener('click', function() {
-      modal.classList.remove('show');
-      if (options.onCancel) options.onCancel();
-    });
-    modalFooter.appendChild(confirmBtn);
-    modalFooter.appendChild(cancelBtn);
+    
+    // Hanya buat tombol jika ada teksnya
+    if (options.confirmText) {
+        const confirmBtn = document.createElement('button');
+        confirmBtn.textContent = options.confirmText;
+        confirmBtn.classList.add('confirm');
+        confirmBtn.addEventListener('click', function() {
+            modal.classList.remove('show');
+            if (options.onConfirm) {
+                options.onConfirm(inputElem ? inputElem.value : null);
+            }
+        });
+        modalFooter.appendChild(confirmBtn);
+    }
+
+    if (options.cancelText) {
+        const cancelBtn = document.createElement('button');
+        cancelBtn.textContent = options.cancelText || "Batal";
+        cancelBtn.classList.add('cancel');
+        cancelBtn.addEventListener('click', function() {
+            modal.classList.remove('show');
+            if (options.onCancel) options.onCancel();
+        });
+        modalFooter.appendChild(cancelBtn);
+    }
+    
     modal.classList.add('show');
+    
+    // Jalankan callback setelah modal dirender (penting untuk event listener)
+    if(options.onRender) {
+      options.onRender();
+    }
   }
   window.openModal = openModal;
-
-  // --- Elemen UI dan Variabel State ---
+  
+  // Sisa kode... (sama seperti sebelumnya)
   const dzikirTypeSelect = document.getElementById('dzikir-type');
   const dzikirDisplay = document.getElementById('dzikir-display');
   const addDzikirBtn = document.getElementById('add-dzikir-btn');
@@ -272,8 +333,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   addDzikirBtn.addEventListener('click', function() {
     openModal({
+      title: "Tambah Dzikir",
       message: "Masukkan teks dzikir baru:",
       input: true,
+      confirmText: "Simpan",
+      cancelText: "Batal",
       onConfirm: function(value) {
         if (value && value.trim() !== "") {
           const newDzikir = value.trim();
@@ -308,9 +372,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     const currentText = dzikirTypeSelect.options[selectedIndex].text;
     openModal({
+      title: "Edit Dzikir",
       message: "Edit teks dzikir:",
       input: true,
       defaultValue: currentText,
+      confirmText: "Simpan",
+      cancelText: "Batal",
       onConfirm: function(newText) {
         if (newText && newText.trim() !== "") {
           dzikirTypeSelect.options[selectedIndex].value = newText.trim();
@@ -332,9 +399,11 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     openModal({
+      title: "Hapus Dzikir",
       message: "Anda yakin ingin menghapus dzikir ini?",
       input: false,
       confirmText: "Hapus",
+      cancelText: "Batal",
       onConfirm: function() {
         dzikirTypeSelect.remove(selectedIndex);
         dzikirTypeSelect.selectedIndex = 0;
@@ -345,13 +414,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Event listener untuk tombol hapus semua riwayat
   clearHistoryBtn.addEventListener('click', function() {
     if (confirm('Anda yakin ingin menghapus seluruh riwayat dzikir?')) {
       dzikirHistory = [];
       localStorage.removeItem('dzikirHistory');
       showNotification("Hapus semua riwayat☑️");
-      // Panggil fungsi untuk memperbarui tampilan riwayat jika ada
       if (typeof updateHistoryDisplay === "function") {
         updateHistoryDisplay();
       }
@@ -360,11 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   countButton.addEventListener('click', function() {
     if (this.classList.contains("btn-disabled")) {
-      openModal({
-        message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
-        input: false,
-        confirmText: "OK"
-      });
+      openModal({ message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!", input: false, confirmText: "OK" });
       return;
     }
     if (targetCount > 0 && count >= targetCount) {
@@ -373,9 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     count++;
     counterDisplay.classList.add('counter-animation');
-    setTimeout(() => {
-      counterDisplay.classList.remove('counter-animation');
-    }, 500);
+    setTimeout(() => { counterDisplay.classList.remove('counter-animation'); }, 500);
     updateDisplay();
     addRippleEffect(countButton);
     const buttonRect = countButton.getBoundingClientRect();
@@ -389,21 +450,14 @@ document.addEventListener('DOMContentLoaded', function() {
       countButton.style.opacity = "0.5";
       countButton.style.cursor = "not-allowed";
       for (let i = 0; i < 5; i++) {
-        setTimeout(() => {
-          createParticles(Math.random() * containerRect.width, Math.random() * containerRect.height, 10,
-            ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6']);
-        }, i * 200);
+        setTimeout(() => { createParticles(Math.random() * containerRect.width, Math.random() * containerRect.height, 10, ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6']); }, i * 200);
       }
     }
   });
 
   resetButton.addEventListener('click', function() {
     if (this.classList.contains("btn-disabled")) {
-      openModal({
-        message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
-        input: false,
-        confirmText: "OK"
-      });
+      openModal({ message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!", input: false, confirmText: "OK" });
       return;
     }
     count = 0;
@@ -415,54 +469,30 @@ document.addEventListener('DOMContentLoaded', function() {
     addRippleEffect(resetButton);
   });
 
-
-  // Tombol Simpan Sesi
   saveButton.addEventListener('click', function() {
     if (this.classList.contains("btn-disabled")) {
-      openModal({
-        message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
-        input: false,
-        confirmText: "OK"
-      });
+      openModal({ message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!", input: false, confirmText: "OK" });
       return;
     }
-
     const loadingOverlay = document.getElementById('loading');
-    // Tampilkan overlay loading
     loadingOverlay.style.display = 'flex';
-
-    // Simulasikan proses penyimpanan selama 2 detik
     setTimeout(() => {
       try {
-        // Lakukan penyimpanan sesi
         const dzikirText = dzikirDisplay.textContent;
         const currentDate = new Date();
         const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}`;
-        const session = {
-          id: Date.now(),
-          type: dzikirText,
-          count: count,
-          target: targetCount,
-          date: formattedDate
-        };
+        const session = { id: Date.now(), type: dzikirText, count: count, target: targetCount, date: formattedDate };
         dzikirHistory.unshift(session);
         localStorage.setItem('dzikirHistory', JSON.stringify(dzikirHistory));
-
-        // Pastikan fungsi updateHistoryList() telah didefinisikan
         if (typeof updateHistoryList === "function") {
           updateHistoryList();
         }
-
         addRippleEffect(saveButton);
-
-        // Tampilkan notifikasi setelah proses penyimpanan selesai
         showNotification("Berhasil Simpan sesi Dzikir", "#2ecc71");
-
       } catch (error) {
         console.error("Error saat menyimpan sesi:", error);
         showNotification("Terjadi error saat menyimpan sesi", "#e74c3c");
       } finally {
-        // Pastikan overlay loading disembunyikan
         loadingOverlay.style.display = 'none';
       }
     }, 2000);
@@ -470,83 +500,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
   exportPdfBtn.addEventListener('click', function() {
     if (dzikirHistory.length === 0) {
-      openModal({
-        message: "Tidak ada data riwayat untuk diekspor!",
-        input: false,
-        confirmText: "OK"
-      });
+      openModal({ message: "Tidak ada data riwayat untuk diekspor!", input: false, confirmText: "OK" });
       return;
     }
-    const {
-      jsPDF
-    } = window.jspdf;
+    const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    // Tambahkan kolom "No" di awal
     const columns = ["No", "Jenis Dzikir", "Hitungan", "Target", "Tanggal"];
-    // Sertakan nomor urut di setiap baris
-    const rows = dzikirHistory.map((session, index) => [
-      index + 1,
-      session.type,
-      session.count,
-      session.target || "∞",
-      session.date
-    ]);
-    doc.autoTable({
-      head: [columns],
-      body: rows,
-      startY: 20,
-    });
+    const rows = dzikirHistory.map((session, index) => [ index + 1, session.type, session.count, session.target || "∞", session.date ]);
+    doc.autoTable({ head: [columns], body: rows, startY: 20, });
     doc.save("riwayat_dzikir.pdf");
   });
 
-  // Fungsi updateHistoryList yang mungkin belum ada
-  function updateHistoryList() {
-    // Fungsi ini dikosongkan karena tidak ada elemen 'history-list' di index.html
-    // Jika ada, logikanya akan ditaruh di sini.
-  }
+  function updateHistoryList() { /* ... */ }
 
   updateDisplay();
   updateHistoryList();
   updateButtonsState();
 
-  document.addEventListener('copy', function(e) {
-    e.preventDefault();
-  });
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-  });
+  document.addEventListener('copy', e => e.preventDefault());
+  document.addEventListener('contextmenu', e => e.preventDefault());
 
   document.addEventListener('keydown', function(event) {
     if (event.key === ' ' || event.key === 'ArrowUp') {
       if (!countButton.classList.contains("btn-disabled")) {
         countButton.click();
       } else {
-        openModal({
-          message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
-          input: false,
-          confirmText: "OK"
-        });
+        openModal({ message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!", input: false, confirmText: "OK" });
       }
       event.preventDefault();
     } else if (event.key === 'r' || event.key === 'R') {
       if (!resetButton.classList.contains("btn-disabled")) {
         resetButton.click();
       } else {
-        openModal({
-          message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
-          input: false,
-          confirmText: "OK"
-        });
+        openModal({ message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!", input: false, confirmText: "OK" });
       }
     } else if (event.key === 's' || event.key === 'S') {
       if (!saveButton.classList.contains("btn-disabled")) {
         saveButton.click();
       } else {
-        openModal({
-          message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!",
-          input: false,
-          confirmText: "OK"
-        });
+        openModal({ message: "Silakan pilih jenis dzikir dan isi target jumlah terlebih dahulu!", input: false, confirmText: "OK" });
       }
     }
   });
