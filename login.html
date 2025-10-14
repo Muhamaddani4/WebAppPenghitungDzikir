@@ -16,6 +16,7 @@
       height: auto;
       display: block;
     }
+    /* Animasi & styling lain seperti sebelumnya */
     @keyframes gradientAnimation {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -25,6 +26,10 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    @keyframes spinner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     @keyframes refreshAnimation {
       from { opacity: 1; transform: scale(1); }
       to { opacity: 0; transform: scale(0.8); }
@@ -32,6 +37,7 @@
     .refreshing {
       animation: refreshAnimation 0.5s forwards;
     }
+    /* Background menggunakan gradien */
     html, body {
       margin: 0;
       padding: 0;
@@ -117,6 +123,7 @@
     button:hover {
       transform: scale(1.02);
     }
+    /* Tombol refresh */
     #refreshButton {
       background: linear-gradient(90deg, #6a11cb, #2575fc);
       margin-top: 15px;
@@ -130,6 +137,19 @@
       text-decoration: none;
       user-select: none;
       -webkit-user-select: none;
+    }
+    /* Style untuk loading overlay (jika diperlukan) */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
     }
   </style>
 </head>
@@ -153,13 +173,24 @@
     <p>Belum punya akun? <a href="register.html" oncontextmenu="return false;" style="user-select: none;">Daftar disini</a></p>
   </div>
 
+  <!-- Loading overlay (opsional) -->
+  <div class="loading-overlay" id="loadingOverlay"></div>
+
   <script>
-    // Tombol refresh animasi
+    // Refresh halaman saat event scroll (wheel) terjadi
+    window.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      location.reload();
+    }, { passive: false });
+
+    // Tombol refresh: animasi refresh sebelum reload
     const refreshButton = document.getElementById('refreshButton');
     const container = document.getElementById('container');
     refreshButton.addEventListener('click', function() {
       container.classList.add('refreshing');
-      setTimeout(() => location.reload(), 500);
+      setTimeout(() => {
+        location.reload();
+      }, 500);
     });
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -168,66 +199,61 @@
       const password = document.getElementById('password');
       const emailError = document.getElementById('emailError');
       const passwordError = document.getElementById('passwordError');
+      const loadingOverlay = document.getElementById('loadingOverlay');
 
       // Toggle password
       const togglePassword = document.getElementById('togglePassword');
       togglePassword.addEventListener('click', function() {
         const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', type);
-        togglePassword.src = type === 'password' ? "show.png" : "hide.png";
+        togglePassword.src = type === 'password' 
+          ? "show.png" 
+          : "hide.png";
       });
 
-      // Validasi email
       function validateEmail() {
-        const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-        if (!emailRegex.test(email.value.trim())) {
+        const emailValue = email.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailValue)) {
           emailError.textContent = 'Format email tidak valid';
           return false;
         }
         emailError.textContent = '';
         return true;
       }
-
-      // Validasi password
       function validatePassword() {
-        if (password.value.length < 8) {
+        const passwordValue = password.value;
+        if (passwordValue.length < 8) {
           passwordError.textContent = 'Password minimal 8 karakter';
           return false;
         }
         passwordError.textContent = '';
         return true;
       }
-
       email.addEventListener('input', validateEmail);
       password.addEventListener('input', validatePassword);
 
       loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
-
-        if (!validateEmail() || !validatePassword()) return;
-
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(u =>
-          u.email.toLowerCase() === email.value.trim().toLowerCase() &&
-          u.password === btoa(password.value)
-        );
-
-        if (user) {
-          // Simpan data user yang login
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          localStorage.setItem('role', user.role || 'user'); // default role user
-
-          alert('Login berhasil!');
-
-          // Redirect berdasarkan role
-          if (user.role === 'admin') {
-            window.location.href = 'admin.html';
+        const isEmailValid = validateEmail();
+        const isPasswordValid = validatePassword();
+        if (isEmailValid && isPasswordValid) {
+          let users = JSON.parse(localStorage.getItem('users')) || [];
+          const user = users.find(u => 
+            u.email.toLowerCase() === email.value.trim().toLowerCase() &&
+            u.password === btoa(password.value)
+          );
+          if (user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            // Tampilkan overlay loading
+            loadingOverlay.classList.add('active');
+            // Redirect ke halaman login redirect
+            setTimeout(() => {
+              window.location.href = 'loginRedirect.html';
+            }, 2000);
           } else {
-            window.location.href = 'index.html';
+            alert('Email atau password salah!');
           }
-
-        } else {
-          alert('Email atau password salah!');
         }
       });
     });
