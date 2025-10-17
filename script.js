@@ -37,8 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const isCurrentUser = user.email === currentUser.email;
       const deleteButton = isCurrentUser 
         ? `<button class="btn btn-disabled" disabled>Hapus</button>`
-        : `<button class="btn btn-danger delete-user-btn" data-email="${user.email}">Hapus</button>`;
-      tableHTML += `<tr><td>${user.username}</td><td>${user.email}</td><td>${user.role}</td><td>${deleteButton}</td></tr>`;
+        : `<button class="btn btn-danger btn-small delete-user-btn" data-email="${user.email}">Hapus</button>`;
+      const editButton = `<button class="btn btn-small edit-user-btn" data-email="${user.email}" style="margin-right: 5px;">Edit</button>`;
+      
+      tableHTML += `<tr><td>${user.username}</td><td>${user.email}</td><td>${user.role}</td><td>${editButton}${deleteButton}</td></tr>`;
     });
     tableHTML += '</tbody></table>';
     openModal({
@@ -50,6 +52,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm(`Yakin ingin menghapus user: ${userEmail}?`)) deleteUser(userEmail);
           });
         });
+        document.querySelectorAll('.edit-user-btn').forEach(button => {
+          button.addEventListener('click', function() {
+            const userEmail = this.getAttribute('data-email');
+            editUser(userEmail);
+          });
+        });
       }
     });
   }
@@ -57,8 +65,77 @@ document.addEventListener('DOMContentLoaded', function() {
   function deleteUser(email) {
     let users = JSON.parse(localStorage.getItem('users')) || [];
     localStorage.setItem('users', JSON.stringify(users.filter(user => user.email !== email)));
-    manageUsers();
+    manageUsers(); // Refresh the list
     showNotification(`User ${email} berhasil dihapus.`, '#f85149');
+  }
+
+  function editUser(email) {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const userToEdit = users.find(user => user.email === email);
+      if (!userToEdit) return;
+
+      document.getElementById('modal').classList.remove('show'); // Tutup modal daftar user
+
+      // Buka modal baru untuk edit
+      let editFormHTML = `
+        <div class="input-group">
+          <label for="edit-username">Username</label>
+          <input type="text" id="edit-username" value="${userToEdit.username}">
+        </div>
+        <div class="input-group">
+          <label for="edit-email">Email</label>
+          <input type="email" id="edit-email" value="${userToEdit.email}">
+        </div>
+        <div class="input-group">
+            <label for="edit-role">Role</label>
+            <select id="edit-role" class="input-group">
+                <option value="user" ${userToEdit.role === 'user' ? 'selected' : ''}>User</option>
+                <option value="admin" ${userToEdit.role === 'admin' ? 'selected' : ''}>Admin</option>
+            </select>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-secondary);">Catatan: Password tidak dapat diubah dari panel ini.</p>
+      `;
+
+      setTimeout(() => { // Beri jeda agar modal sebelumnya tertutup sempurna
+        openModal({
+          title: "Edit Pengguna", contentHTML: editFormHTML,
+          confirmText: "Simpan", cancelText: "Batal",
+          onConfirm: () => {
+            const newData = {
+              username: document.getElementById('edit-username').value,
+              email: document.getElementById('edit-email').value,
+              role: document.getElementById('edit-role').value,
+            };
+            updateUser(email, newData);
+          },
+          onCancel: () => manageUsers() // Buka kembali daftar user jika dibatalkan
+        });
+      }, 300);
+  }
+  
+  function updateUser(originalEmail, newData) {
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      const userIndex = users.findIndex(user => user.email === originalEmail);
+
+      if (userIndex !== -1) {
+          const isEmailTaken = users.some((user, index) => user.email === newData.email && index !== userIndex);
+          if (isEmailTaken) {
+              showNotification(`Email ${newData.email} sudah digunakan!`, '#f85149');
+              manageUsers();
+              return;
+          }
+
+          users[userIndex] = { ...users[userIndex], ...newData };
+          
+          if (currentUser.email === originalEmail) {
+              const updatedCurrentUser = { ...currentUser, ...newData };
+              localStorage.setItem('currentUser', JSON.stringify(updatedCurrentUser));
+          }
+
+          localStorage.setItem('users', JSON.stringify(users));
+          showNotification(`Data untuk ${originalEmail} berhasil diperbarui.`, '#3fb950');
+      }
+      manageUsers(); // Refresh daftar pengguna
   }
   
   // --- 3. PENGATURAN UI UTAMA ---
@@ -118,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       modal.classList.add('show');
       if (options.input) document.getElementById('modal-input').focus();
+      if (options.onRender) options.onRender();
   }
   window.openLogoutModal = (e) => { e.preventDefault(); document.getElementById('logoutModal').style.display = 'flex'; };
   window.closeLogoutModal = () => { document.getElementById('logoutModal').style.display = 'none'; };
