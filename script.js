@@ -38,13 +38,23 @@ document.addEventListener('DOMContentLoaded', function() {
       const deleteButton = isCurrentUser 
         ? `<button class="btn btn-disabled" disabled>Hapus</button>`
         : `<button class="btn btn-danger btn-small delete-user-btn" data-email="${user.email}">Hapus</button>`;
-      const editButton = `<button class="btn btn-small edit-user-btn" data-email="${user.email}" style="margin-right: 5px;">Edit</button>`;
       
-      tableHTML += `<tr><td>${user.username}</td><td>${user.email}</td><td>${user.role}</td><td>${editButton}${deleteButton}</td></tr>`;
+      // PERUBAHAN DI SINI: Tambahkan class "btn-edit"
+      const editButton = `<button class="btn btn-edit btn-small edit-user-btn" data-email="${user.email}">Edit</button>`;
+      
+      tableHTML += `
+        <tr>
+          <td>${user.username}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td class="action-cell">${editButton}${deleteButton}</td>
+        </tr>`;
     });
     tableHTML += '</tbody></table>';
     openModal({
-      title: "Kelola Pengguna", contentHTML: tableHTML, confirmText: "Tutup",
+      title: "Kelola Pengguna", 
+      contentHTML: tableHTML, 
+      confirmText: "Tutup",
       onRender: () => {
         document.querySelectorAll('.delete-user-btn').forEach(button => {
           button.addEventListener('click', function() {
@@ -60,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     });
-  }
+}
 
   function deleteUser(email) {
     let users = JSON.parse(localStorage.getItem('users')) || [];

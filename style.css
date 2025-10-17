@@ -135,13 +135,14 @@ body {
   display: block; margin-bottom: 8px; font-size: 0.9rem;
   color: var(--text-secondary);
 }
-select, input[type="number"], input[type="text"], textarea {
+/* INI KODE BARU (YANG BENAR) */
+select, input[type="number"], input[type="text"], input[type="email"], textarea {
   width: 100%; background: transparent;
   border: 1px solid var(--border-color);
   border-radius: 10px; 
   padding: 12px 15px;
   font-family: var(--font-family); color: var(--text-color); font-size: 1rem;
-  resize: vertical; /* Memungkinkan textarea diubah ukurannya secara vertikal */
+  resize: vertical;
 }
 select:focus, input:focus { outline: none; border-color: var(--accent-color); }
 
@@ -370,4 +371,32 @@ input, textarea {
 /* Memperbesar ukuran default textarea di halaman bantuan */
 textarea#contact-message {
     min-height: 150px; /* Atur tinggi minimal */
+}
+
+/* --- Atur Tombol Aksi di Panel Admin --- */
+.action-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- Styling Tombol Aksi Spesifik --- */
+.btn-edit {
+  border-color: var(--admin-color); /* Warna border kuning */
+  color: var(--admin-color);      /* Warna teks kuning */
+}
+
+.btn-edit:hover {
+  background: var(--admin-color); /* Background jadi kuning saat disentuh */
+  color: white;                   /* Teks jadi putih */
+}
+
+.btn-danger {
+  border-color: var(--danger-color); /* Warna border merah */
+  color: var(--danger-color);      /* Warna teks merah */
+}
+
+.btn-danger:hover {
+  background: var(--danger-color); /* Background jadi merah saat disentuh */
+  color: white;
 }
